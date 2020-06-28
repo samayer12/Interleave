@@ -3,6 +3,7 @@ from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
 from io import StringIO
+from csv import writer
 
 # implementation from: https://stackoverflow.com/questions/26494211/extracting-text-from-a-pdf-file-using-pdfminer-in-python
 def convert_pdf_to_txt(path):
@@ -42,3 +43,10 @@ if __name__ == '__main__':
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 def zip_sentences(list1, list2):
     return  list(zip(list1, list2))
+
+
+def create_csv(data):
+    with open('../output/Matched_Paragraphs.csv', 'w', newline='') as csvfile:
+        writer(csvfile, delimiter=',').writerows([('Document1', 'Document2')])
+        writer(csvfile, delimiter=',').writerows(data)
+    return 'Files created.'
