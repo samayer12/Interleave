@@ -31,7 +31,6 @@ def convert_pdf_to_txt(path):
     retstr.close()
     return text
 
-
 def get_sentences(input_text):
     return input_text.split('\n\n')
 
