@@ -4,7 +4,7 @@ from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
 from io import StringIO
 from csv import writer
-
+import re
 
 # implementation from: https://stackoverflow.com/questions/26494211/extracting-text-from-a-pdf-file-using-pdfminer-in-python
 def convert_pdf_to_txt(path):
@@ -32,7 +32,8 @@ def convert_pdf_to_txt(path):
     return text
 
 def get_sentences(input_text):
-    return input_text.split('\n\n')
+    sentences = re.compile(r'(\d\. (?:\n\n[^\d+\.]\S|\S| |\.)+)\n\n').findall(input_text)
+    return [sentence.replace('\n\n', ' ').replace('  ', ' ') for sentence in sentences]
 
 
 def print_hi(name):
