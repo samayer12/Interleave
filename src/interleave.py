@@ -41,12 +41,10 @@ def print_hi(name):
     print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
 
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
 def zip_sentences(list1, list2):
     return list(zip(list1, list2))
 

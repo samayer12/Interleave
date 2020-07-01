@@ -7,15 +7,22 @@ class PDFTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.sample_text = '1. First Entry\n\n2. Second Entry\n\n3. Third Entry\n\n\f'
+        cls.multiline_text = '1. First Entry. This is a really long entry. It spans multiple lines. Very long.' \
+                             ' So tall. Can you believe how many words are here?\n\n2. Second Entry. ' \
+                             'This is an even longer entry! This one spans three lines. ' \
+                             'Ha, and you thought the last guy was verbose. Wait until I tell you a story my ' \
+                             'great-great grandfather once told me. Four score and seven years ago...\n\n' \
+                             '3. Third Entry\n\n\f'
         cls.processed_text = [('1. First Entry', '1. First Entry'),
                               ('2. Second Entry', '2. Second Entry'),
                               ('3. Third Entry', '3. Third Entry'),
                               ('\f', '\f')]
 
     def test_opens_PDF(self):
-        self.assertEqual('1. First Entry\n\n'
-                         '2. Second Entry\n\n'
-                         '3. Third Entry\n\n\f', interleave.convert_pdf_to_txt('./test/PDFs/Simple.pdf'))
+        self.assertEqual(self.sample_text, interleave.convert_pdf_to_txt('./test/PDFs/Simple.pdf'))
+
+    def test_opens_multiline_PDF(self):
+        self.assertEqual(self.multiline_text, interleave.convert_pdf_to_txt('./test/PDFs/Multiline.pdf'))
 
     def test_splits_sentences(self):
         self.assertEqual(['1. First Entry', '2. Second Entry', '3. Third Entry', '\f'],
