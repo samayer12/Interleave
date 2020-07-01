@@ -2,14 +2,15 @@ import unittest
 from src import interleave
 from unittest.mock import patch
 
+
 class PDFTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.sample_text = '1. First Entry\n\n2. Second Entry\n\n3. Third Entry\n\n\f'
         cls.processed_text = [('1. First Entry', '1. First Entry'),
-                          ('2. Second Entry', '2. Second Entry'),
-                          ('3. Third Entry', '3. Third Entry'),
-                          ('\f', '\f')]
+                              ('2. Second Entry', '2. Second Entry'),
+                              ('3. Third Entry', '3. Third Entry'),
+                              ('\f', '\f')]
 
     def test_opens_PDF(self):
         self.assertEqual('1. First Entry\n\n'
@@ -34,6 +35,7 @@ class PDFTests(unittest.TestCase):
         interleave.create_csv(self.processed_text)
         self.assertEqual(1, mock_open.call_count)
         self.assertEqual(2, mock_writer.call_count)
+
 
 if __name__ == '__main__':
     loader = unittest.TestLoader()

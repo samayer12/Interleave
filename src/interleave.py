@@ -5,6 +5,7 @@ from pdfminer.pdfpage import PDFPage
 from io import StringIO
 from csv import writer
 
+
 # implementation from: https://stackoverflow.com/questions/26494211/extracting-text-from-a-pdf-file-using-pdfminer-in-python
 def convert_pdf_to_txt(path):
     rsrcmgr = PDFResourceManager()
@@ -17,9 +18,10 @@ def convert_pdf_to_txt(path):
     password = ""
     maxpages = 0
     caching = True
-    pagenos=set()
+    pagenos = set()
 
-    for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, password=password,caching=caching, check_extractable=True):
+    for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, password=password, caching=caching,
+                                  check_extractable=True):
         interpreter.process_page(page)
 
     text = retstr.getvalue()
@@ -29,20 +31,24 @@ def convert_pdf_to_txt(path):
     retstr.close()
     return text
 
+
 def get_sentences(input_text):
     return input_text.split('\n\n')
+
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
 
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
 
+
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 def zip_sentences(list1, list2):
-    return  list(zip(list1, list2))
+    return list(zip(list1, list2))
 
 
 def create_csv(data):
