@@ -6,7 +6,7 @@ from unittest.mock import patch
 class PDFTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.short_text = '1. First Entry\n\n2. Second Entry\n\n3. Third Entry\n\n\f'
+        cls.short_text = '1. First Entry\n\n22. Second Entry\n\n321. Third Entry\n\n\f'
         cls.multiline_text = '1. First Entry. This is a really long entry. It spans multiple lines. Very long. ' \
                              'So tall. Can you \n\nbelieve how many words are here?\n\n' \
                              '2. Second Entry. This is an even longer entry! ' \
@@ -14,7 +14,7 @@ class PDFTests(unittest.TestCase):
                              'Wait until I tell you a story my great-great grandfather once told me. Four\n\n' \
                              'score and seven years ago...\n\n' \
                              '3. Third Entry\n\n\f'
-        cls.split_simple_text = ['1. First Entry', '2. Second Entry', '3. Third Entry']
+        cls.split_simple_text = ['1. First Entry', '22. Second Entry', '321. Third Entry']
         cls.split_multiline_text = ['1. First Entry. This is a really long entry. It spans multiple lines. Very long. '
                                     'So tall. Can you believe how many words are here?',
                                     '2. Second Entry. This is an even longer entry! This one spans three lines. '
@@ -23,8 +23,8 @@ class PDFTests(unittest.TestCase):
                                     'Four score and seven years ago...',
                                     '3. Third Entry']
         cls.processed_text = [('1. First Entry', '1. First Entry'),
-                              ('2. Second Entry', '2. Second Entry'),
-                              ('3. Third Entry', '3. Third Entry')]
+                              ('22. Second Entry', '22. Second Entry'),
+                              ('321. Third Entry', '321. Third Entry')]
 
     def test_opens_PDF(self):
         self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('./test/PDFs/Simple.pdf'))
