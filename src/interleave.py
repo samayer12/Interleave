@@ -9,7 +9,9 @@ from io import StringIO
 from csv import writer
 import re
 
-# implementation from: https://stackoverflow.com/questions/26494211/extracting-text-from-a-pdf-file-using-pdfminer-in-python
+
+# implementation from:
+# https://stackoverflow.com/questions/26494211/extracting-text-from-a-pdf-file-using-pdfminer-in-python
 def convert_pdf_to_txt(path):
     rsrcmgr = PDFResourceManager()
     retstr = StringIO()
@@ -23,8 +25,8 @@ def convert_pdf_to_txt(path):
     caching = True
     pagenos = set()
 
-    for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, password=password, caching=caching,
-                                  check_extractable=True):
+    for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, password=password,
+                                  caching=caching, check_extractable=True):
         interpreter.process_page(page)
 
     text = retstr.getvalue()
@@ -33,6 +35,7 @@ def convert_pdf_to_txt(path):
     device.close()
     retstr.close()
     return text
+
 
 def get_sentences(input_text):
     sentences = re.compile(r'(\d\. (?:\n\n[^\d+\.]\S|\S| |\.)+)\n\n').findall(input_text)
@@ -49,11 +52,17 @@ def create_csv(data):
         writer(csvfile, delimiter=',').writerows(data)
     return 'Files created.'
 
+
 def main(argv):
     parser = argparse.ArgumentParser(description='Match numbered paragraphs from a PDF and store them in a CSV file.')
-    parser.add_argument('infiles', metavar='I', type=str, nargs=2, help='two files to match and store')
+    parser.add_argument('input', metavar='I', type=str, nargs=2, help='two files to match and store')
     parser.add_argument('output', metavar='O', type=str, nargs=1, help='name of output file')
     args = parser.parse_args()
+
+    print('\nColumn A source: ' + args.input[0] +
+          '\nColumn B source: ' + args.input[1] +
+          '\nOutput File: ' + args.output[0] + '\n')
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
