@@ -63,6 +63,11 @@ def main(argv):
           '\nColumn B source: ' + args.input[1] +
           '\nOutput File: ' + args.output[0] + '\n')
 
+    text_first_file = convert_pdf_to_txt(args.input[0])
+    text_second_file = convert_pdf_to_txt(args.input[1])
+
+    filtered_text = zip_sentences(get_sentences(text_first_file), get_sentences(text_second_file))
+    create_csv(filtered_text)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
