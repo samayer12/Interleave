@@ -8,37 +8,17 @@ from pdfminer.pdfpage import PDFPage
 from io import StringIO
 from csv import writer
 import re
+import textract
 
 
-# implementation from:
-# https://stackoverflow.com/questions/26494211/extracting-text-from-a-pdf-file-using-pdfminer-in-python
 def convert_pdf_to_txt(path):
-    rsrcmgr = PDFResourceManager()
-    retstr = StringIO()
-    codec = 'utf-8'
-    laparams = LAParams()
-    device = TextConverter(rsrcmgr, retstr, codec=codec, laparams=laparams)
-    fp = open(path, 'rb')
-    interpreter = PDFPageInterpreter(rsrcmgr, device)
-    password = ""
-    maxpages = 0
-    caching = True
-    pagenos = set()
-
-    for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, password=password,
-                                  caching=caching, check_extractable=True):
-        interpreter.process_page(page)
-
-    text = retstr.getvalue()
-
-    fp.close()
-    device.close()
-    retstr.close()
+    text = textract.process(path, method='pdfminer').decode()
     return text
 
 
 def get_sentences(input_text):
     sentences = re.compile(r'(\d+\. (?:\n\n[^\d+\.]\S|\S| |\.)+)\n\n').findall(input_text)
+    # sentences = re.compile(r'(\d+\. (?:\n\n[^C.+][^\d+\.]\S|\S| |\.)+)\n\n').findall(input_text)
     return [sentence.replace('\f', '').replace('\n\n', ' ').replace('  ', ' ') for sentence in sentences]
 
 
@@ -68,6 +48,7 @@ def main(argv):
 
     filtered_text = zip_sentences(get_sentences(text_first_file), get_sentences(text_second_file))
     print(create_csv(filtered_text))
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
