@@ -39,7 +39,7 @@ def convert_pdf_to_txt(path):
 
 def get_sentences(input_text):
     sentences = re.compile(r'(\d+\. (?:\n\n[^\d+\.]\S|\S| |\.)+)\n\n').findall(input_text)
-    return [sentence.replace('\n\n', ' ').replace('  ', ' ') for sentence in sentences]
+    return [sentence.replace('\f', '').replace('\n\n', ' ').replace('  ', ' ') for sentence in sentences]
 
 
 def zip_sentences(list1, list2):
