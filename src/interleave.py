@@ -1,3 +1,6 @@
+import argparse
+import sys
+
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
@@ -36,15 +39,6 @@ def get_sentences(input_text):
     return [sentence.replace('\n\n', ' ').replace('  ', ' ') for sentence in sentences]
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
-
-
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-
 def zip_sentences(list1, list2):
     return list(zip(list1, list2))
 
@@ -54,3 +48,12 @@ def create_csv(data):
         writer(csvfile, delimiter=',').writerows([('Document1', 'Document2')])
         writer(csvfile, delimiter=',').writerows(data)
     return 'Files created.'
+
+def main(argv):
+    parser = argparse.ArgumentParser(description='Match numbered paragraphs from a PDF and store them in a CSV file.')
+    parser.add_argument('infiles', metavar='I', type=str, nargs=2, help='two files to match and store')
+    parser.add_argument('output', metavar='O', type=str, nargs=1, help='name of output file')
+    args = parser.parse_args()
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
