@@ -38,7 +38,7 @@ def convert_pdf_to_txt(path):
 
 
 def get_sentences(input_text):
-    sentences = re.compile(r'(\d\. (?:\n\n[^\d+\.]\S|\S| |\.)+)\n\n').findall(input_text)
+    sentences = re.compile(r'(\d+\. (?:\n\n[^\d+\.]\S|\S| |\.)+)\n\n').findall(input_text)
     return [sentence.replace('\n\n', ' ').replace('  ', ' ') for sentence in sentences]
 
 
@@ -67,7 +67,7 @@ def main(argv):
     text_second_file = convert_pdf_to_txt(args.input[1])
 
     filtered_text = zip_sentences(get_sentences(text_first_file), get_sentences(text_second_file))
-    create_csv(filtered_text)
+    print(create_csv(filtered_text))
 
 if __name__ == '__main__':
     main(sys.argv[1:])
