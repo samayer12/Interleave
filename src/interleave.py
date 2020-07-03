@@ -17,8 +17,7 @@ def convert_pdf_to_txt(path):
 
 
 def get_sentences(input_text):
-    sentences = re.compile(r'(\d+\. (?:\n\n[^\d+\.]\S|\S| |\.)+)\n\n').findall(input_text)
-    # sentences = re.compile(r'(\d+\. (?:\n\n[^C.+][^\d+\.]\S|\S| |\.)+)\n\n').findall(input_text)
+    sentences = re.compile(r'(\d+\. (?:\n\n(?:[\S| ]+))+\n\n)').findall(input_text)
     return [sentence.replace('\f', '').replace('\n\n', ' ').replace('  ', ' ') for sentence in sentences]
 
 

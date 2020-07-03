@@ -42,7 +42,6 @@ class PDFTests(unittest.TestCase):
                                     'to automatically handle a page-break. This paragraph splits to the next page and '
                                     'continues with a number so it is 1234 words.']
 
-
         cls.processed_text = [('1. First Entry', '1. First Entry'),
                               ('22. Second Entry', '22. Second Entry'),
                               ('321. Third Entry', '321. Third Entry')]
