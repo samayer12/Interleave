@@ -21,11 +21,13 @@ def get_sentences(input_text):
     sentences = re.sub(r'(\n+\d+ \n+)', '', sentences) # Remove Page Numbers
     sentences = re.sub(r'\n+[A-Z| ]+\n+', '\n\n', sentences) # Remove Section Titles
     sentences = re.sub(r'([I|V|X|C|M|D]+\.[A-Z|a-z| |\.|\'|\’|-|-|\n]+)\n[\d|A-Z]', '\n\n', sentences) # Remove Roman Numeral Section Titles
-    sentences = re.sub(r'(\n\n\n)', '\n\n', sentences)  # Apply Consistent Paragraph Spacing
+    sentences = re.sub(r'(\n{3,}|\n\n )', '', sentences)  # Apply Consistent Paragraph Spacing
+    sentences = re.sub(r'  ', ' ', sentences) # Apply Consistent Text Spacing
+    sentences = re.sub(r'(\) \n)|(\)\n)|(\) )(?=\d)', '\n', sentences) # Force Paragraph 1 to Match Regex
     sentences = re.sub(r'((?<=[^ ]\d\. )\n\n)', '', sentences) # Put Paragraph Numbers in-line with first sentence
     sentences = re.compile(r'(\d+\. (?:\n\n(?:[\S| ]+))+\n\n)').findall(sentences) # Find paragraphs
-    sentences = [sentence.replace('\n\n ', '').replace('\n\n', ' ').replace('  ', ' ') for sentence in sentences]
-    return sentences
+    sentence_list = [sentence for sentence in sentences]
+    return sentence_list
 
 def zip_sentences(list1, list2):
     return list(zip(list1, list2))
@@ -42,11 +44,25 @@ def main(argv):
     parser = argparse.ArgumentParser(description='Match numbered paragraphs from a PDF and store them in a CSV file.')
     parser.add_argument('input', metavar='I', type=str, nargs=2, help='two files to match and store')
     parser.add_argument('output', metavar='O', type=str, nargs=1, help='name of output file')
+    parser.add_argument('-r', '--raw', default=False, action='store_true', help='convert PDFs to raw text')
+
     args = parser.parse_args()
 
     print('\nColumn A source: ' + args.input[0] +
-          '\nColumn B source: ' + args.input[1] +
-          '\nOutput File: ' + args.output[0] + '\n')
+          '\nColumn B source: ' + args.input[1])
+
+    if args.raw:
+        doc_1_dest = '../output/document1.txt'
+        doc_2_dest = '../output/document2.txt'
+        print('\nStoring inputs as raw text.' +
+              '\nDocument 1 destination: ' + doc_1_dest +
+              '\nDocument 2 destination: ' + doc_2_dest)
+        with open(doc_1_dest, 'w') as file:
+            file.write(convert_pdf_to_txt(args.input[0]))
+        with open(doc_2_dest, 'w') as file:
+            file.write(convert_pdf_to_txt(args.input[1]))
+    else:
+        print('\nOutput File: ' + args.output[0] + '\n')
 
     text_first_file = convert_pdf_to_txt(args.input[0])
     text_second_file = convert_pdf_to_txt(args.input[1])
