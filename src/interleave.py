@@ -17,9 +17,15 @@ def convert_pdf_to_txt(path):
 
 
 def get_sentences(input_text):
-    sentences = re.compile(r'(\d+\. (?:\n\n(?:[\S| ]+))+\n\n)').findall(input_text)
-    return [sentence.replace('\f', '').replace('\n\n', ' ').replace('  ', ' ') for sentence in sentences]
-
+    sentences = re.sub(r'(\fC.*\d\n)', '', input_text) # Remove Page Headers
+    sentences = re.sub(r'(\n+\d+ \n+)', '', sentences) # Remove Page Numbers
+    sentences = re.sub(r'\n+[A-Z| ]+\n+', '\n\n', sentences) # Remove Section Titles
+    sentences = re.sub(r'([I|V|X|C|M|D]+\.[A-Z|a-z| |\.|\'|\’|-|-|\n]+)\n[\d|A-Z]', '\n\n', sentences) # Remove Roman Numeral Section Titles
+    sentences = re.sub(r'(\n\n\n)', '\n\n', sentences)  # Apply Consistent Paragraph Spacing
+    sentences = re.sub(r'((?<=[^ ]\d\. )\n\n)', '', sentences) # Put Paragraph Numbers in-line with first sentence
+    sentences = re.compile(r'(\d+\. (?:\n\n(?:[\S| ]+))+\n\n)').findall(sentences) # Find paragraphs
+    sentences = [sentence.replace('\n\n ', '').replace('\n\n', ' ').replace('  ', ' ') for sentence in sentences]
+    return sentences
 
 def zip_sentences(list1, list2):
     return list(zip(list1, list2))
