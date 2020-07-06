@@ -14,14 +14,17 @@ class PDFTests(unittest.TestCase):
 
         with open('text/multipage_text.txt', 'r') as file:
             cls.multipage_text = file.read()
-        
+
         with open('text/pagenumbers.txt', 'r') as file:
             cls.pagenumbers = file.read()
 
         with open('text/headers.txt', 'r') as file:
             cls.headers = file.read()
 
-        cls.split_simple_text = ['1. First Entry', '22. Second Entry', '321. Third Entry']
+        with open('text/edge_numbers.txt', 'r') as file:
+            cls.edge_numbers = file.read()
+
+        cls.split_simple_text = ['1. First Entry.', '22. Second Entry.', '321. Third Entry.']
 
         cls.split_multiline_text = ['1. First Entry. This is a really long entry. It spans multiple lines. Very long. '
                                     'So tall. Can you believe how many words are here?',
@@ -29,7 +32,7 @@ class PDFTests(unittest.TestCase):
                                     'Ha, and you thought the last guy was verbose. '
                                     'Wait until I tell you a story my great-great grandfather once told me. '
                                     'Four score and seven years ago...',
-                                    '3. Third Entry']
+                                    '3. Third Entry.']
 
         cls.split_multipage_text = ['1. First Entry. ',
                                     '2. Second Entry. This paragraphs spans multiple pages. Words enable the document '
@@ -39,18 +42,21 @@ class PDFTests(unittest.TestCase):
                                     'to automatically handle a page-break. This paragraph splits to the next page and '
                                     'continues with a number so it is 1234 words.']
 
-        cls.processed_text = [('1. First Entry', '1. First Entry'),
-                              ('22. Second Entry', '22. Second Entry'),
-                              ('321. Third Entry', '321. Third Entry')]
+        cls.processed_text = [('1. First Entry.', '1. First Entry.'),
+                              ('22. Second Entry.', '22. Second Entry.'),
+                              ('321. Third Entry.', '321. Third Entry.')]
 
     def test_opens_PDF(self):
-        self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('../test/PDFs/Simple.pdf'))
+        self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('PDFs/Simple.pdf'))
 
     def test_opens_multiline_PDF(self):
-        self.assertEqual(self.multiline_text, interleave.convert_pdf_to_txt('../test/PDFs/Multiline.pdf'))
+        self.assertEqual(self.multiline_text, interleave.convert_pdf_to_txt('PDFs/Multiline.pdf'))
 
     def test_opens_multipage_PDF(self):
-        self.assertEqual(self.multipage_text, interleave.convert_pdf_to_txt('../test/PDFs/Multipage.pdf'))
+        self.assertEqual(self.multipage_text, interleave.convert_pdf_to_txt('PDFs/Multipage.pdf'))
+
+    def test_builds_paragraphs_correctly(self):
+        self.assertEqual(self.split_simple_text, interleave.build_paragraph(self.short_text))
 
     def test_splits_short_sentences(self):
         self.assertEqual(self.split_simple_text,
@@ -71,6 +77,10 @@ class PDFTests(unittest.TestCase):
     def test_removes_page_headers(self):
         self.assertNotRegex('\n'.join(interleave.get_sentences(self.headers)),
                             r'(\fC.*\d\n)')
+
+    def test_edge_case_four_digit_references(self):
+        result = interleave.get_sentences(self.edge_numbers)
+        self.assertEqual(4, len(result))  # Expect three paragraphs
 
     def test_zip_sentences_to_tuple(self):
         list1 = self.short_text
