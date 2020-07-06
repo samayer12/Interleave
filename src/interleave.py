@@ -16,18 +16,35 @@ def convert_pdf_to_txt(path):
     return text
 
 
+def build_paragraph(input_text):
+    sentences = input_text.split('\n\n')[:-1]  # Remove final page feed
+    final_paragraphs = list()
+    paragraph = ''
+    for sentence in sentences:
+        if sentence.split('.')[0].isnumeric():
+            if paragraph != '' or \
+                    paragraph[:-1] == '.' or \
+                    paragraph[:-1] == '!' or \
+                    paragraph[:-1] == '?':
+                final_paragraphs.append(paragraph)
+            paragraph = sentence.strip('\f')
+        else:
+            paragraph += sentence.strip('\f')
+    final_paragraphs.append(paragraph)
+
+    return final_paragraphs
+
+
 def get_sentences(input_text):
-    sentences = re.sub(r'(\fC.*\d\n)', '', input_text) # Remove Page Headers
-    sentences = re.sub(r'(\n+\d+ \n+)', '', sentences) # Remove Page Numbers
-    sentences = re.sub(r'\n+[A-Z| ]+\n+', '\n\n', sentences) # Remove Section Titles
-    sentences = re.sub(r'([I|V|X|C|M|D]+\.[A-Z|a-z| |\.|\'|\’|-|-|\n]+)\n[\d|A-Z]', '\n\n', sentences) # Remove Roman Numeral Section Titles
+    sentences = re.sub(r'(\fC.*\d\n)', '', input_text)  # Remove Page Headers
+    sentences = re.sub(r'(\n\d+ \n)', '', sentences)  # Remove Page Numbers
+    sentences = re.sub(r'\n+[A-Z| ]+\n+', '\n\n', sentences)  # Remove Section Titles
+    sentences = re.sub(r'([I|V|X|C|M|D]+\.[A-Z|a-z| |\.|\'|\’|-|-|\n]+)\n[\d|A-Z]', '\n\n',
+                       sentences)  # Remove Roman Numeral Section Titles
     sentences = re.sub(r'(\n{3,}|\n\n )', '', sentences)  # Apply Consistent Paragraph Spacing
-    sentences = re.sub(r'  ', ' ', sentences) # Apply Consistent Text Spacing
-    sentences = re.sub(r'(\) \n)|(\)\n)|(\) )(?=\d)', '\n', sentences) # Force Paragraph 1 to Match Regex
-    sentences = re.sub(r'((?<=[^ ]\d\. )\n\n)', '', sentences) # Put Paragraph Numbers in-line with first sentence
-    sentences = re.compile(r'(\d+\. (?:\n\n(?:[\S| ]+))+\n\n)').findall(sentences) # Find paragraphs
-    sentence_list = [sentence for sentence in sentences]
-    return sentence_list
+    sentences = re.sub(r'  ', ' ', sentences)  # Apply Consistent Text Spacing
+    return build_paragraph(sentences)
+
 
 def zip_sentences(list1, list2):
     return list(zip(list1, list2))
@@ -64,11 +81,11 @@ def main(argv):
     else:
         print('\nOutput File: ' + args.output[0] + '\n')
 
-    text_first_file = convert_pdf_to_txt(args.input[0])
-    text_second_file = convert_pdf_to_txt(args.input[1])
+        text_first_file = convert_pdf_to_txt(args.input[0])
+        text_second_file = convert_pdf_to_txt(args.input[1])
 
-    filtered_text = zip_sentences(get_sentences(text_first_file), get_sentences(text_second_file))
-    print(create_csv(filtered_text))
+        filtered_text = zip_sentences(get_sentences(text_first_file), get_sentences(text_second_file))
+        print(create_csv(filtered_text))
 
 
 if __name__ == '__main__':
