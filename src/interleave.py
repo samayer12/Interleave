@@ -47,7 +47,7 @@ def zip_sentences(list1, list2):
 
 
 def create_csv(data):
-    with open('../output/Matched_Paragraphs.csv', 'w', newline='') as csvfile:
+    with open('output/Matched_Paragraphs.csv', 'w', newline='') as csvfile:
         writer(csvfile, delimiter=',').writerows([('Document1', 'Document2')])
         writer(csvfile, delimiter=',').writerows(data)
     return 'Files created.'
