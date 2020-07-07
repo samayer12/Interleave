@@ -15,6 +15,9 @@ class PDFTests(unittest.TestCase):
         with open('text/multipage_text.txt', 'r') as file:
             cls.multipage_text = file.read()
 
+        with open('text/1000_paragraphs.txt', 'r') as file:
+            cls.thousand_paragraphs = file.read()
+
         with open('text/pagenumbers.txt', 'r') as file:
             cls.pagenumbers = file.read()
 
@@ -57,6 +60,9 @@ class PDFTests(unittest.TestCase):
 
     def test_opens_multipage_PDF(self):
         self.assertEqual(self.multipage_text, interleave.convert_pdf_to_txt('PDFs/Multipage.pdf'))
+
+    def test_counts_up_to_1000_paragraphs(self):
+        self.assertEqual(1000, len(interleave.get_sentences(self.thousand_paragraphs)))
 
     def test_builds_paragraphs_correctly(self):
         self.assertEqual(self.split_simple_text, interleave.build_paragraph('\n\n' + self.short_text))

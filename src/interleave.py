@@ -18,9 +18,16 @@ def convert_pdf_to_txt(path):
 
 def build_paragraph(input_text):
     matches = re.split(r'(\n\n)(\d+\.\s)', input_text)[2:]
-    result = [re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip())
-              for i in range(0, len(matches), 3)]
-    return result
+    result = ['']
+    old_paragraph_number = 0
+    for i in range(0, len(matches), 3):
+        paragraph_number = int(matches[i].split('.')[0])
+        if paragraph_number != old_paragraph_number + 1:
+            result[-1] += ' ' + re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip())
+        else:
+            result.append(re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip()))
+            old_paragraph_number = paragraph_number
+    return result[1:]
 
 
 def get_sentences(input_text):
@@ -32,7 +39,7 @@ def get_sentences(input_text):
     sentences = re.sub(r'(\n{3,}|\n\n )', '', sentences)  # Apply Consistent Paragraph Spacing
     sentences = re.sub(r'  ', ' ', sentences)  # Apply Consistent Text Spacing
     sentences = re.sub(r'(\S)(\n\n)([A-Za-z])', r'\1 \3', sentences)  # Handle EOL without a space
-    return build_paragraph('\n\n' + sentences)
+    return build_paragraph('\n\n' + sentences)  # Prepend lets first paragraph match others
 
 
 def zip_sentences(list1, list2):
