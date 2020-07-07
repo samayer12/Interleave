@@ -30,7 +30,7 @@ class PDFTests(unittest.TestCase):
         with open('text/edge_missing_paragraphs.txt', 'r') as file:
             cls.edge_paragraphs = file.read()
 
-        cls.split_simple_text = ['1. First Entry.', '22. Second Entry.', '321. Third Entry.']
+        cls.split_simple_text = ['1. First Entry.', '2. Second Entry.', '3. Third Entry.']
 
         cls.split_multiline_text = ['1. First Entry. This is a really long entry. It spans multiple lines. Very long. '
                                     'So tall. Can you believe how many words are here?',
@@ -49,8 +49,8 @@ class PDFTests(unittest.TestCase):
                                     'continues with a number so it is 1234 words.']
 
         cls.processed_text = [('1. First Entry.', '1. First Entry.'),
-                              ('22. Second Entry.', '22. Second Entry.'),
-                              ('321. Third Entry.', '321. Third Entry.')]
+                              ('2. Second Entry.', '2. Second Entry.'),
+                              ('3. Third Entry.', '3. Third Entry.')]
 
     def test_opens_PDF(self):
         self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('PDFs/Simple.pdf'))
