@@ -24,6 +24,9 @@ class PDFTests(unittest.TestCase):
         with open('text/edge_numbers.txt', 'r') as file:
             cls.edge_numbers = file.read()
 
+        with open('text/edge_missing_paragraphs.txt', 'r') as file:
+            cls.edge_paragraphs = file.read()
+
         cls.split_simple_text = ['1. First Entry.', '22. Second Entry.', '321. Third Entry.']
 
         cls.split_multiline_text = ['1. First Entry. This is a really long entry. It spans multiple lines. Very long. '
@@ -80,7 +83,11 @@ class PDFTests(unittest.TestCase):
 
     def test_edge_case_four_digit_references(self):
         result = interleave.get_sentences(self.edge_numbers)
-        self.assertEqual(4, len(result))  # Expect three paragraphs
+        self.assertEqual(6, len(result))  # Expect six paragraphs
+
+    def test_edge_case_missing_paragraphs(self):
+        result = interleave.get_sentences(self.edge_paragraphs)
+        self.assertEqual(7, len(result)) # Expect seven paragraphs
 
     def test_zip_sentences_to_tuple(self):
         list1 = self.short_text
