@@ -34,7 +34,7 @@ class PDFTests(unittest.TestCase):
                                     'Four score and seven years ago...',
                                     '3. Third Entry.']
 
-        cls.split_multipage_text = ['1. First Entry. ',
+        cls.split_multipage_text = ['1. First Entry.',
                                     '2. Second Entry. This paragraphs spans multiple pages. Words enable the document '
                                     'to automatically handle a page-break. This paragraph splits to the next page and '
                                     'continues with a normal word.',
@@ -56,7 +56,7 @@ class PDFTests(unittest.TestCase):
         self.assertEqual(self.multipage_text, interleave.convert_pdf_to_txt('PDFs/Multipage.pdf'))
 
     def test_builds_paragraphs_correctly(self):
-        self.assertEqual(self.split_simple_text, interleave.build_paragraph(self.short_text))
+        self.assertEqual(self.split_simple_text, interleave.build_paragraph('\n\n' + self.short_text))
 
     def test_splits_short_sentences(self):
         self.assertEqual(self.split_simple_text,

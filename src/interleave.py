@@ -17,34 +17,22 @@ def convert_pdf_to_txt(path):
 
 
 def build_paragraph(input_text):
-    sentences = input_text.split('\n\n')[:-1]  # Remove final page feed
-    final_paragraphs = list()
-    paragraph = ''
-    for sentence in sentences:
-        if sentence.split('.')[0].isnumeric():
-            if paragraph != '' or \
-                    paragraph[:-1] == '.' or \
-                    paragraph[:-1] == '!' or \
-                    paragraph[:-1] == '?':
-                final_paragraphs.append(paragraph)
-            paragraph = sentence.strip('\f')
-        else:
-            paragraph += sentence.strip('\f')
-    final_paragraphs.append(paragraph)
-
-    return final_paragraphs
+    matches = re.split(r'(\n\n)(\d+\.\s)', input_text)[2:]
+    result = [re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip())
+              for i in range(0, len(matches), 3)]
+    return result
 
 
 def get_sentences(input_text):
     sentences = re.sub(r'(\fC.*\d\n)', '', input_text)  # Remove Page Headers
     sentences = re.sub(r'(\n\d+ \n)', '', sentences)  # Remove Page Numbers
     sentences = re.sub(r'\n+[A-Z| ]+\n+', '\n\n', sentences)  # Remove Section Titles
-    sentences = re.sub(r'([I|V|X|C|M|D]+\.[A-Z|a-z| |\.|\'|\’|-|-|\n]+)\n[\d|A-Z]', '\n\n',
+    sentences = re.sub(r'([I|V|X|C|M|D]+\.[A-Za-z| |\.|\'|\’|-|-|\n]+)\n[\dA-Z]', '\n\n',
                        sentences)  # Remove Roman Numeral Section Titles
     sentences = re.sub(r'(\n{3,}|\n\n )', '', sentences)  # Apply Consistent Paragraph Spacing
     sentences = re.sub(r'  ', ' ', sentences)  # Apply Consistent Text Spacing
-    sentences = re.sub(r'(\S)(\n\n)([A-z|a-z])', r'\1 \3', sentences)
-    return build_paragraph(sentences)
+    sentences = re.sub(r'(\S)(\n\n)([A-Za-z])', r'\1 \3', sentences)  # Handle EOL without a space
+    return build_paragraph('\n\n' + sentences)
 
 
 def zip_sentences(list1, list2):
