@@ -1,0 +1,121 @@
+26. 
+
+EPA is generally supposed to complete this determination within 90 days, which 
+
+it may extend by an additional 90 days for good cause. 15 U.S.C. § 2604(c). 
+
+27. 
+
+As an alternative to the PMN application process, a person may apply to 
+
+manufacture a chemical under the test marketing exemption in order to manufacture or process 
+
+the chemical for “test marketing purposes,” subject to certain additional statutory and regulatory 
+
+criteria. 15 U.S.C. § 2604(h)(1). EPA must disclose receipt of the test marketing exemption 
+
+10 
+ 
+
+Case 1:20-cv-00762   Document 1   Filed 03/18/20   Page 11 of 85
+
+application by publishing notice in the Federal Register “[i]mmediately upon receipt” of the 
+
+application. Id. § 2604(h)(6). 
+
+II. 
+
+Congress Envisioned a Transparent Review Process to Enable Public Participation 
+in EPA’s Decision-Making.  
+ 
+28. 
+
+To ensure, “that the public receive timely notification of any new chemical 
+
+substance,” H.R. Rep. No. 94-1679, at 67-68 (1976) (Conf. Rep.), Congress mandated that EPA 
+
+promptly inform the public when EPA has received a PMN application, by publishing a notice in 
+
+the Federal Register within 5 business days of EPA’s receipt of the PMN application. 15 U.S.C. 
+
+§ 2604(d)(2) (“not later than five days (excluding Saturdays, Sundays and legal holidays) after 
+
+the date of the receipt of a [PMN] … the Administrator shall publish in the Federal Register a 
+
+notice.” (emphasis added)). The notice of receipt must: “(A) identif[y] the chemical substance…; 
+
+(B) list[] the uses of such substance identified in the notice; and (C) in the case of the receipt of 
+
+information under subsection (b), describe[] the nature of the tests performed on such substance 
+
+and any information which was developed pursuant to subsection (b) or a rule, order, or consent 
+
+agreement under [section 4].” Id.; see also 40 C.F.R. § 720.40(d) (describing contents of a 
+
+PMN).  
+
+29. 
+
+EPA must then disclose the contents of the PMN application to any interested 
+
+person. 15 U.S.C. § 2604(d)(1). To do so, EPA first is required to place “[a]ll information 
+
+submitted with a [PMN], including any health and safety study and other supporting 
+
+documentation” in a “public file for that [PMN].” 40 C.F.R. § 720.95; see id. § 720.3(kk) 
+
+(defining “[s]upport documents [to] mean[] material and information submitted to EPA in 
+
+support of a TSCA section 5 notice, including but not limited to, correspondence,”). Then, EPA 
+
+is required to make the public file publicly available, both via request from the EPA Docket 
+
+11 
+ 
+
+Case 1:20-cv-00762   Document 1   Filed 03/18/20   Page 12 of 85
+
+Center; and by placing it online in an electronic docket for the PMN at 
+
+http://www.regulations.gov. 40 C.F.R. §§ 700.17(b)(1), (2), 720.95. 
+
+III.  Congress Enacted Limited Protections for Confidentiality 
+
+ 
+30. 
+
+In the 2016 amendments, Congress struck a precise balance between the public’s 
+
+right to information about the chemicals undergoing EPA review and the information that 
+
+manufacturers could claim, and EPA could protect, as confidential.  
+
+31. 
+
+As a result, TSCA significantly limits what information EPA can withhold as 
+
+confidential from a PMN public file. First, EPA must disclose all information submitted with the 
+
+PMN application to interested persons, except for information that meets the confidentiality 
+
+requirements of § 2613. 15 U.S.C. § 2604(d)(1). In turn, under subsection 2613(a), EPA may not 
+
+protect information submitted with the PMN unless the manufacturer establishes that: (1) the 
+
+information meets the requirements for a trade secret or privileged and confidential information 
+
+under the Freedom of Information Act, 5 U.S.C. § 552(b)(4); and (2) the information meets the 
+
+requirements for confidentiality established in 15 U.S.C. § 2613(c). 15 U.S.C. § 2613(a).  
+
+32. 
+
+Crucially, Congress wanted the public to have access to information about the 
+
+health and safety of chemical substances undergoing premanufacture review and, thus, provided 
+
+that “any health and safety study” along with “any information…from a health and safety study” 
+
+submitted with a PMN is categorically ineligible to be treated as confidential by EPA, even if it 
+
+would otherwise meet the requirements of subsection 2613(a). Id. § 2613(b)(2)(A)(ii), (B). 
