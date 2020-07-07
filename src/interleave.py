@@ -1,14 +1,9 @@
 import argparse
 import sys
-
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-from pdfminer.pdfpage import PDFPage
-from io import StringIO
 from csv import writer
 import re
 import textract
+import itertools
 
 
 def convert_pdf_to_txt(path):
@@ -52,7 +47,7 @@ def get_sentences(input_text):
 
 
 def zip_sentences(list1, list2):
-    return list(zip(list1, list2))
+    return list(itertools.zip_longest(list1, list2))
 
 
 def create_csv(data):
