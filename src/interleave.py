@@ -26,8 +26,8 @@ def build_paragraph(input_text):
 def get_sentences(input_text):
     sentences = re.sub(r'(\fC.*\d\n)', '', input_text)  # Remove Page Headers
     sentences = re.sub(r'(\n\d+ \n)', '', sentences)  # Remove Page Numbers
-    sentences = re.sub(r'\n+[A-Z| ]+\n+', '\n\n', sentences)  # Remove Section Titles
-    sentences = re.sub(r'([I|V|X|C|M|D]+\.[A-Za-z| |\.|\'|\’|-|-|\n]+)\n[\dA-Z]', '\n\n',
+    sentences = re.sub(r'\n+[A-Z ]+\n+', '\n\n', sentences)  # Remove Section Titles
+    sentences = re.sub(r'([IVXCMD]+\.[A-Za-z \.\'\’\n-]+)\n[\dA-Z]', '\n\n',
                        sentences)  # Remove Roman Numeral Section Titles
     sentences = re.sub(r'(\n{3,}|\n\n )', '', sentences)  # Apply Consistent Paragraph Spacing
     sentences = re.sub(r'  ', ' ', sentences)  # Apply Consistent Text Spacing
