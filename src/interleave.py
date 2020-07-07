@@ -43,6 +43,7 @@ def get_sentences(input_text):
                        sentences)  # Remove Roman Numeral Section Titles
     sentences = re.sub(r'(\n{3,}|\n\n )', '', sentences)  # Apply Consistent Paragraph Spacing
     sentences = re.sub(r'  ', ' ', sentences)  # Apply Consistent Text Spacing
+    sentences = re.sub(r'(\S)(\n\n)([A-z|a-z])', r'\1 \3', sentences)
     return build_paragraph(sentences)
 
 
