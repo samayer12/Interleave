@@ -23,7 +23,15 @@ def build_paragraph(input_text):
     for i in range(0, len(matches), 3):
         paragraph_number = int(matches[i].split('.')[0])
         if paragraph_number != old_paragraph_number + 1:
-            result[-1] += ' ' + re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip())
+            error_message = 'ERROR Parsing Paragraph {0} detected {1}. '.format(
+                old_paragraph_number + 1, paragraph_number)
+            if paragraph_number >= old_paragraph_number:
+                result.append(error_message)
+                result.append(re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip()))
+            else:
+                result.append(error_message + ' ' + re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip()))
+            if paragraph_number in range(old_paragraph_number, old_paragraph_number + 3):
+                old_paragraph_number = paragraph_number
         else:
             result.append(re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip()))
             old_paragraph_number = paragraph_number
@@ -39,7 +47,8 @@ def get_sentences(input_text):
     sentences = re.sub(r'(\n{3,}|\n\n )', '', sentences)  # Apply Consistent Paragraph Spacing
     sentences = re.sub(r'  ', ' ', sentences)  # Apply Consistent Text Spacing
     sentences = re.sub(r'(\S)(\n\n)([A-Za-z])', r'\1 \3', sentences)  # Handle EOL without a space
-    return build_paragraph('\n\n' + sentences)  # Prepend lets first paragraph match others
+    sentences = re.sub(r'(\n\) )(1\.\s)', r'\n\n\2', sentences, 1)  # Make first paragraph match others
+    return build_paragraph('\n\n' + sentences) # \n\n to match test files with real datasets
 
 
 def zip_sentences(list1, list2):
