@@ -1,9 +1,11 @@
 import unittest
 from src import interleave
 from unittest.mock import patch
+import textract
 
 
 class PDFTests(unittest.TestCase):
+
     @classmethod
     def setUpClass(cls):
         with open('text/short_text.txt', 'r') as file:
@@ -15,16 +17,29 @@ class PDFTests(unittest.TestCase):
         with open('text/multipage_text.txt', 'r') as file:
             cls.multipage_text = file.read()
 
+        with open('text/1000_paragraphs.txt', 'r') as file:
+            cls.thousand_paragraphs = file.read()
+
         with open('text/pagenumbers.txt', 'r') as file:
             cls.pagenumbers = file.read()
 
         with open('text/headers.txt', 'r') as file:
             cls.headers = file.read()
 
-        with open('text/edge_numbers.txt', 'r') as file:
+        with open('text/edge_line_start_numbers.txt', 'r') as file:
             cls.edge_numbers = file.read()
 
-        cls.split_simple_text = ['1. First Entry.', '22. Second Entry.', '321. Third Entry.']
+        with open('text/edge_missing_paragraphs.txt', 'r') as file:
+            cls.edge_missing_paragraphs = file.read()
+
+        with open('text/edge_first_paragraph.txt', 'r') as file:
+            cls.edge_first_paragraph = file.read()
+
+        cls.complex_PDF_1 = textract.process('PDFs/Complex_1.pdf', method='pdfminer').decode()
+
+        cls.complex_PDF_2 = textract.process('PDFs/Complex_2.pdf', method='pdfminer').decode()
+
+        cls.split_simple_text = ['1. First Entry.', '2. Second Entry.', '3. Third Entry.']
 
         cls.split_multiline_text = ['1. First Entry. This is a really long entry. It spans multiple lines. Very long. '
                                     'So tall. Can you believe how many words are here?',
@@ -34,7 +49,7 @@ class PDFTests(unittest.TestCase):
                                     'Four score and seven years ago...',
                                     '3. Third Entry.']
 
-        cls.split_multipage_text = ['1. First Entry. ',
+        cls.split_multipage_text = ['1. First Entry.',
                                     '2. Second Entry. This paragraphs spans multiple pages. Words enable the document '
                                     'to automatically handle a page-break. This paragraph splits to the next page and '
                                     'continues with a normal word.',
@@ -43,8 +58,8 @@ class PDFTests(unittest.TestCase):
                                     'continues with a number so it is 1234 words.']
 
         cls.processed_text = [('1. First Entry.', '1. First Entry.'),
-                              ('22. Second Entry.', '22. Second Entry.'),
-                              ('321. Third Entry.', '321. Third Entry.')]
+                              ('2. Second Entry.', '2. Second Entry.'),
+                              ('3. Third Entry.', '3. Third Entry.')]
 
     def test_opens_PDF(self):
         self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('PDFs/Simple.pdf'))
@@ -55,8 +70,16 @@ class PDFTests(unittest.TestCase):
     def test_opens_multipage_PDF(self):
         self.assertEqual(self.multipage_text, interleave.convert_pdf_to_txt('PDFs/Multipage.pdf'))
 
+    def test_counts_up_to_1000_paragraphs(self):
+        self.assertEqual(1000, len(interleave.get_sentences(self.thousand_paragraphs)))
+
     def test_builds_paragraphs_correctly(self):
-        self.assertEqual(self.split_simple_text, interleave.build_paragraph(self.short_text))
+        self.assertEqual(self.split_simple_text, interleave.build_paragraph('\n\n' + self.short_text))
+
+    def test_counts_correct_amount_of_paragraphs_for_complex_documents(self):
+        self.assertEqual(166, len(interleave.zip_sentences(
+            interleave.get_sentences(self.complex_PDF_1),
+            interleave.get_sentences(self.complex_PDF_2))))
 
     def test_splits_short_sentences(self):
         self.assertEqual(self.split_simple_text,
@@ -78,9 +101,17 @@ class PDFTests(unittest.TestCase):
         self.assertNotRegex('\n'.join(interleave.get_sentences(self.headers)),
                             r'(\fC.*\d\n)')
 
-    def test_edge_case_four_digit_references(self):
+    def test_edge_case_line_starts_with_numeric_sentence_end(self):
         result = interleave.get_sentences(self.edge_numbers)
-        self.assertEqual(4, len(result))  # Expect three paragraphs
+        self.assertEqual(7, len(result))  # Expect seven paragraphs
+
+    def test_edge_case_missing_paragraphs(self):
+        result = interleave.get_sentences(self.edge_missing_paragraphs)
+        self.assertEqual(7, len(result))  # Expect seven paragraphs
+
+    def test_edge_case_isolate_first_paragraph(self):
+        result = interleave.get_sentences(self.edge_first_paragraph)
+        self.assertEqual(1, len(result))
 
     def test_zip_sentences_to_tuple(self):
         list1 = self.short_text

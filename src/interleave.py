@@ -1,14 +1,9 @@
 import argparse
 import sys
-
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-from pdfminer.pdfpage import PDFPage
-from io import StringIO
 from csv import writer
 import re
 import textract
+import itertools
 
 
 def convert_pdf_to_txt(path):
@@ -17,38 +12,34 @@ def convert_pdf_to_txt(path):
 
 
 def build_paragraph(input_text):
-    sentences = input_text.split('\n\n')[:-1]  # Remove final page feed
-    final_paragraphs = list()
-    paragraph = ''
-    for sentence in sentences:
-        if sentence.split('.')[0].isnumeric():
-            if paragraph != '' or \
-                    paragraph[:-1] == '.' or \
-                    paragraph[:-1] == '!' or \
-                    paragraph[:-1] == '?':
-                final_paragraphs.append(paragraph)
-            paragraph = sentence.strip('\f')
+    matches = re.split(r'(\n\n)(\d+\.\s)', input_text)[2:]
+    result = ['']
+    old_paragraph_number = 0
+    for i in range(0, len(matches), 3):
+        paragraph_number = int(matches[i].split('.')[0])
+        if paragraph_number != old_paragraph_number + 1:
+            result[-1] += re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip())
         else:
-            paragraph += sentence.strip('\f')
-    final_paragraphs.append(paragraph)
-
-    return final_paragraphs
+            result.append(re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip()))
+            old_paragraph_number = paragraph_number
+    return result[1:]
 
 
 def get_sentences(input_text):
     sentences = re.sub(r'(\fC.*\d\n)', '', input_text)  # Remove Page Headers
     sentences = re.sub(r'(\n\d+ \n)', '', sentences)  # Remove Page Numbers
-    sentences = re.sub(r'\n+[A-Z| ]+\n+', '\n\n', sentences)  # Remove Section Titles
-    sentences = re.sub(r'([I|V|X|C|M|D]+\.[A-Z|a-z| |\.|\'|\’|-|-|\n]+)\n[\d|A-Z]', '\n\n',
-                       sentences)  # Remove Roman Numeral Section Titles
+    sentences = re.sub(r'\n+[A-Z ]+\n+', '\n\n', sentences)  # Remove Section Titles
+    sentences = re.sub(r'([IVXCMD]+\.[A-Za-z \.\'\’\n-]+)\n(?!\dA-z)', ' \n\n',
+                       sentences)  # Remove Roman Numeral Section Titles but don't conflict with next rule
     sentences = re.sub(r'(\n{3,}|\n\n )', '', sentences)  # Apply Consistent Paragraph Spacing
     sentences = re.sub(r'  ', ' ', sentences)  # Apply Consistent Text Spacing
-    sentences = re.sub(r'(\S)(\n\n)([A-z|a-z])', r'\1 \3', sentences)
-    return build_paragraph(sentences)
+    sentences = re.sub(r'(\S)(\n\n)([A-Za-z])', r'\1 \3', sentences)  # Handle EOL without a space
+    sentences = re.sub(r'(\n\) )(1\.\s)', r'\n\n\2', sentences, 1)  # Make first paragraph match others
+    return build_paragraph('\n\n' + sentences) # \n\n to match test files with real datasets
 
 
 def zip_sentences(list1, list2):
-    return list(zip(list1, list2))
+    return list(itertools.zip_longest(list1, list2))
 
 
 def create_csv(data):

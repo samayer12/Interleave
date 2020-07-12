@@ -1,4 +1,4 @@
-8. 
+1. 
 
 However, EPA currently operates the new chemical program as a black box, 
 
@@ -33,7 +33,7 @@ require that EPA publish the applications in an online docket; yet, EPA fails to
 
 Case 1:20-cv-00762   Document 1   Filed 03/18/20   Page 5 of 85
 
-9. 
+2. 
 
 Plaintiffs bring this lawsuit to ensure that EPA complies with TSCA’s disclosure 
 
@@ -61,7 +61,7 @@ to completion of EPA’s reviews.
 
 JURISDICTION AND VENUE 
 
-10. 
+3. 
 
 This action arises under the Toxic Substances Control Act, 15 U.S.C. § 2619. This 
 
@@ -79,7 +79,7 @@ Control Act, 15 U.S.C. § 2619, 28 U.S.C. § 1361, and the Administrative Proced
 
 5 U.S.C. §§ 701-706. 
 
-11. 
+4. 
 
 By certified letters to the Administrator and the Attorney General—posted on 
 
@@ -93,3 +93,41 @@ September 3, 2019, and with return receipts dated, respectively, September 6 and
 2019—Plaintiffs gave notice of this action as required by 15 U.S.C. § 2619(b)(1)(A) and 40 
 
 C.F.R. §§ 702.60-702.62. 
+
+5.  Where a manufacturer makes a non-exempt confidentiality claim but fails to 
+
+provide a substantiation document to EPA, EPA is not authorized to treat the information as 
+
+confidential and thereby withhold it from the public. 15 U.S.C. § 2613(c)(3); 82 Fed. Reg. at 
+
+6522. If the PMN submitter does provide a substantiation document, the substantiation document 
+
+must be placed in the public file. 40 C.F.R. § 720.95; 40 C.F.R. § 720.80(b)(2). 
+
+36 
+ 
+
+Case 1:20-cv-00762   Document 1   Filed 03/18/20   Page 37 of 85
+
+6.  Yet, for each of the 90 PMNs in Table 9, the public file contains redactions of 
+
+information claimed confidential, without containing any substantiation document whatsoever. 
+
+Many of the documents redacted from the public files in Table 9 contain information that facially 
+
+does not fall within one of the § 2613(c)(2) exemptions from substantiation. EPA’s failure to 
+
+disclose a substantiation document for these PMNs indicates either that EPA is unlawfully 
+
+protecting information that is non-exempt, despite the manufacturers’ failure to provide 
+
+substantiation documents, or that EPA is unlawfully withholding the substantiation documents 
+
+the manufacturers did submit.  
+
+7. New paragraph. It has a wrap
+
+1. With a smaller number.
+
+And then continues.
+
