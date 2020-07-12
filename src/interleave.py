@@ -18,15 +18,7 @@ def build_paragraph(input_text):
     for i in range(0, len(matches), 3):
         paragraph_number = int(matches[i].split('.')[0])
         if paragraph_number != old_paragraph_number + 1:
-            error_message = 'ERROR Parsing Paragraph {0} detected {1}. '.format(
-                old_paragraph_number + 1, paragraph_number)
-            if paragraph_number >= old_paragraph_number:
-                result.append(error_message)
-                result.append(re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip()))
-            else:
-                result.append(error_message + ' ' + re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip()))
-            if paragraph_number in range(old_paragraph_number, old_paragraph_number + 3):
-                old_paragraph_number = paragraph_number
+            result[-1] += re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip())
         else:
             result.append(re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip()))
             old_paragraph_number = paragraph_number

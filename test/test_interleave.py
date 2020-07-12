@@ -24,7 +24,7 @@ class PDFTests(unittest.TestCase):
         with open('text/headers.txt', 'r') as file:
             cls.headers = file.read()
 
-        with open('text/edge_numbers.txt', 'r') as file:
+        with open('text/edge_line_start_numbers.txt', 'r') as file:
             cls.edge_numbers = file.read()
 
         with open('text/edge_missing_paragraphs.txt', 'r') as file:
@@ -90,9 +90,9 @@ class PDFTests(unittest.TestCase):
         self.assertNotRegex('\n'.join(interleave.get_sentences(self.headers)),
                             r'(\fC.*\d\n)')
 
-    def test_edge_case_four_digit_references(self):
+    def test_edge_case_line_starts_with_numeric_sentence_end(self):
         result = interleave.get_sentences(self.edge_numbers)
-        self.assertEqual(6, len(result))  # Expect six paragraphs
+        self.assertEqual(7, len(result))  # Expect six paragraphs
 
     def test_edge_case_missing_paragraphs(self):
         result = interleave.get_sentences(self.edge_paragraphs)
