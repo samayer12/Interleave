@@ -28,7 +28,7 @@ class PDFTests(unittest.TestCase):
             cls.edge_numbers = file.read()
 
         with open('text/edge_missing_paragraphs.txt', 'r') as file:
-            cls.edge_paragraphs = file.read()
+            cls.edge_missing_paragraphs = file.read()
 
         with open('text/edge_first_paragraph.txt', 'r') as file:
             cls.edge_first_paragraph = file.read()
@@ -92,11 +92,11 @@ class PDFTests(unittest.TestCase):
 
     def test_edge_case_line_starts_with_numeric_sentence_end(self):
         result = interleave.get_sentences(self.edge_numbers)
-        self.assertEqual(7, len(result))  # Expect six paragraphs
+        self.assertEqual(7, len(result))  # Expect seven paragraphs
 
     def test_edge_case_missing_paragraphs(self):
-        result = interleave.get_sentences(self.edge_paragraphs)
-        self.assertEqual(7, len(result)) # Expect seven paragraphs
+        result = interleave.get_sentences(self.edge_missing_paragraphs)
+        self.assertEqual(7, len(result))  # Expect seven paragraphs
 
     def test_edge_case_isolate_first_paragraph(self):
         result = interleave.get_sentences(self.edge_first_paragraph)
