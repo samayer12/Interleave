@@ -42,8 +42,8 @@ def zip_sentences(list1, list2):
     return list(itertools.zip_longest(list1, list2))
 
 
-def create_csv(data):
-    with open('output/Matched_Paragraphs.csv', 'w', newline='') as csvfile:
+def create_csv(data, path):
+    with open(path, 'w', newline='') as csvfile:
         writer(csvfile, delimiter=',').writerows([('Document1', 'Document2')])
         writer(csvfile, delimiter=',').writerows(data)
     return 'Files created.'
@@ -77,7 +77,7 @@ def main(argv):
         text_second_file = convert_pdf_to_txt(args.input[1])
 
         filtered_text = zip_sentences(get_sentences(text_first_file), get_sentences(text_second_file))
-        print(create_csv(filtered_text))
+        print(create_csv(filtered_text, args.output[0]))
 
 
 if __name__ == '__main__':

@@ -124,7 +124,7 @@ class PDFTests(unittest.TestCase):
     @patch('builtins.open')
     @patch('src.interleave.writer', autospec=True)
     def test_writes_csv(self, mock_writer, mock_open):
-        interleave.create_csv(self.processed_text)
+        interleave.create_csv(self.processed_text, 'fake/path/file.csv')
         self.assertEqual(1, mock_open.call_count)
         self.assertEqual(2, mock_writer.call_count)
 
