@@ -35,8 +35,9 @@ def get_sentences(input_text):
     sentences = re.sub(r'  ', ' ', sentences)  # Apply Consistent Text Spacing
     sentences = re.sub(r'(\S)(\n\n)([A-Za-z])', r'\1 \3', sentences)  # Handle EOL without a space
     sentences = re.sub(r'(\n\) )(1\.\s)', r'\n\n\2', sentences, 1)  # Make first paragraph match others
-    sentences = re.split(r'\n\nTable 1:', sentences)[0] # Remove tables that follow document body
-    return build_paragraph('\n\n' + sentences) # \n\n to match test files with real datasets
+    sentences = re.split(r'\n\nTable 1:', sentences)[0]  # Remove tables that follow document body
+    sentences = re.split(r'\s/s/', sentences)[0]  # Remove EPA-style signature blocks
+    return build_paragraph('\n\n' + sentences)  # \n\n to match test files with real datasets
 
 
 def zip_sentences(list1, list2):
