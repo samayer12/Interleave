@@ -38,6 +38,12 @@ class PDFTests(unittest.TestCase):
         with open('text/edge_final_paragraph.txt', 'r') as file:
             cls.edge_final_paragraph = file.read()
 
+        with open('text/edge_final_paragraph.txt', 'r') as file:
+            cls.edge_final_paragraph = file.read()
+
+        with open('text/edge_EPA_signature_block.txt', 'r') as file:
+            cls.edge_EPA_sigblock = file.read()
+
         cls.complex_PDF_1 = textract.process('PDFs/Complex_1.pdf', method='pdfminer').decode()
 
         cls.complex_PDF_2 = textract.process('PDFs/Complex_2.pdf', method='pdfminer').decode()
@@ -66,6 +72,8 @@ class PDFTests(unittest.TestCase):
 
         cls.table_title = 'Table 1: PMNs for which EPA untimely published notice of receipt in the Federal Register'
 
+        cls.EPA_signature = '/s/'
+        
     def test_opens_PDF(self):
         self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('PDFs/Simple.pdf'))
 
@@ -122,6 +130,10 @@ class PDFTests(unittest.TestCase):
         result = interleave.get_sentences(self.edge_final_paragraph)[0]
         self.assertNotIn(self.table_title, result)
 
+    def test_edge_case_strip_EPA_style_sigblock(self):
+        result = interleave.get_sentences(self.edge_EPA_sigblock)
+        self.assertNotIn(self.EPA_signature, result)
+
     def test_zip_sentences_to_tuple(self):
         list1 = self.short_text
         list2 = self.short_text
@@ -133,7 +145,7 @@ class PDFTests(unittest.TestCase):
     @patch('builtins.open')
     @patch('src.interleave.writer', autospec=True)
     def test_writes_csv(self, mock_writer, mock_open):
-        interleave.create_csv(self.processed_text, 'fake/path/file.csv')
+        interleave.create_csv(self.processed_text, 'fake/path/file.csv', ('Doc1', 'Doc2'))
         self.assertEqual(1, mock_open.call_count)
         self.assertEqual(2, mock_writer.call_count)
 
