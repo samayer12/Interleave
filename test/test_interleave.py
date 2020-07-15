@@ -34,6 +34,9 @@ class PDFTests(unittest.TestCase):
 
         with open('text/edge_first_paragraph.txt', 'r') as file:
             cls.edge_first_paragraph = file.read()
+            
+        with open('text/edge_final_paragraph.txt', 'r') as file:
+            cls.edge_final_paragraph = file.read()
 
         with open('text/edge_final_paragraph.txt', 'r') as file:
             cls.edge_final_paragraph = file.read()
