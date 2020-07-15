@@ -34,6 +34,9 @@ class PDFTests(unittest.TestCase):
 
         with open('text/edge_first_paragraph.txt', 'r') as file:
             cls.edge_first_paragraph = file.read()
+            
+        with open('text/edge_final_paragraph.txt', 'r') as file:
+            cls.edge_final_paragraph = file.read()
 
         cls.complex_PDF_1 = textract.process('PDFs/Complex_1.pdf', method='pdfminer').decode()
 
@@ -61,6 +64,8 @@ class PDFTests(unittest.TestCase):
                               ('2. Second Entry.', '2. Second Entry.'),
                               ('3. Third Entry.', '3. Third Entry.')]
 
+        cls.table_title = 'Table 1: PMNs for which EPA untimely published notice of receipt in the Federal Register'
+
     def test_opens_PDF(self):
         self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('PDFs/Simple.pdf'))
 
@@ -77,9 +82,9 @@ class PDFTests(unittest.TestCase):
         self.assertEqual(self.split_simple_text, interleave.build_paragraph('\n\n' + self.short_text))
 
     def test_counts_correct_amount_of_paragraphs_for_complex_documents(self):
-        self.assertEqual(166, len(interleave.zip_sentences(
-            interleave.get_sentences(self.complex_PDF_1),
-            interleave.get_sentences(self.complex_PDF_2))))
+        result = interleave.zip_sentences(interleave.get_sentences(self.complex_PDF_1),
+                                          interleave.get_sentences(self.complex_PDF_2))
+        self.assertEqual(166, len(result))
 
     def test_splits_short_sentences(self):
         self.assertEqual(self.split_simple_text,
@@ -112,6 +117,10 @@ class PDFTests(unittest.TestCase):
     def test_edge_case_isolate_first_paragraph(self):
         result = interleave.get_sentences(self.edge_first_paragraph)
         self.assertEqual(1, len(result))
+
+    def test_edge_case_ignore_trailing_tables(self):
+        result = interleave.get_sentences(self.edge_final_paragraph)[0]
+        self.assertNotIn(self.table_title, result)
 
     def test_zip_sentences_to_tuple(self):
         list1 = self.short_text
