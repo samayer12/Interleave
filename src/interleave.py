@@ -63,8 +63,8 @@ def main(argv):
           '\nColumn B source: ' + args.input[1])
 
     if args.raw:
-        doc_1_dest = '../output/document1.txt'
-        doc_2_dest = '../output/document2.txt'
+        doc_1_dest = '../output/' + args.input[0].split('/')[-1].split('.')[0] + '.txt'
+        doc_2_dest = '../output/' + args.input[1].split('/')[-1].split('.')[0] + '.txt'
         print('\nStoring inputs as raw text.' +
               '\nDocument 1 destination: ' + doc_1_dest +
               '\nDocument 2 destination: ' + doc_2_dest)
