@@ -34,7 +34,7 @@ class PDFTests(unittest.TestCase):
 
         with open('text/edge_first_paragraph.txt', 'r') as file:
             cls.edge_first_paragraph = file.read()
-            
+
         with open('text/edge_final_paragraph.txt', 'r') as file:
             cls.edge_final_paragraph = file.read()
 
@@ -73,7 +73,7 @@ class PDFTests(unittest.TestCase):
         cls.table_title = 'Table 1: PMNs for which EPA untimely published notice of receipt in the Federal Register'
 
         cls.EPA_signature = '/s/'
-        
+
     def test_opens_PDF(self):
         self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('PDFs/Simple.pdf'))
 
