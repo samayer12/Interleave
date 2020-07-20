@@ -44,8 +44,11 @@ class PDFUnitTests(unittest.TestCase):
         with open('text/edge_final_paragraph.txt', 'r') as file:
             cls.edge_final_paragraph = file.read()
 
-        with open('text/edge_EPA_signature_block.txt', 'r') as file:
-            cls.edge_EPA_sigblock = file.read()
+        with open('text/edge_EPA_signature_block_1.txt', 'r') as file:
+            cls.edge_EPA_sigblock_1 = file.read()
+
+        with open('text/edge_EPA_signature_block_2.txt', 'r') as file:
+            cls.edge_EPA_sigblock_2 = file.read()
 
         cls.split_simple_text = ['1. First Entry.', '2. Second Entry.', '3. Third Entry.']
 
@@ -71,7 +74,9 @@ class PDFUnitTests(unittest.TestCase):
 
         cls.table_title = 'Table 1: PMNs for which EPA untimely published notice of receipt in the Federal Register'
 
-        cls.EPA_signature = '/s/'
+        cls.EPA_signature_1 = '/s/'
+
+        cls.EPA_signature_2 = 'Respectfully submitted,'
 
     def test_opens_PDF(self):
         self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('PDFs/Simple.pdf'))
@@ -130,9 +135,14 @@ class PDFUnitTests(unittest.TestCase):
         result = interleave.get_sentences(self.edge_final_paragraph)[0]
         self.assertNotIn(self.table_title, result)
 
-    def test_edge_case_strip_EPA_style_sigblock(self):
-        result = interleave.get_sentences(self.edge_EPA_sigblock)
-        self.assertNotIn(self.EPA_signature, result)
+    def test_edge_case_strip_EPA_sigblock_1(self):
+        result = '\n'.join(interleave.get_sentences(self.edge_EPA_sigblock_1))
+        self.assertNotIn(self.EPA_signature_1, result)
+
+    def test_edge_case_strip_EPA_sigblock_2(self):
+        result = '\n'.join(interleave.get_sentences(self.edge_EPA_sigblock_2))
+        self.assertNotIn(self.EPA_signature_2, result)
+
 
     def test_zip_sentences_to_tuple(self):
         list1 = self.short_text

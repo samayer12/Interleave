@@ -36,6 +36,7 @@ def get_sentences(input_text):
     sentences = re.sub(r'(\n\) )(1\.\s)', r'\n\n\2', sentences, 1)  # Make first paragraph match others
     sentences = re.split(r'\n\nTable 1:', sentences)[0]  # Remove tables that follow document body
     sentences = re.split(r'\s/s/', sentences)[0]  # Remove EPA-style signature blocks
+    sentences = re.split(r'Respectfully submitted,', sentences)[0] # Remove EPA-style signature blocks
     sentences = sentences.replace(chr(160), '\n')
     return build_paragraph('\n\n' + sentences)  # \n\n to match test files with real datasets
 
