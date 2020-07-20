@@ -112,7 +112,8 @@ class PDFUnitTests(unittest.TestCase):
         result = interleave.get_sentences(self.nbsp_formfeed)
         self.assertNotIn(chr(160), result)
         self.assertNotIn(chr(12), result)
-        
+        self.assertEqual(2, len(result))
+
     def test_edge_case_line_starts_with_numeric_sentence_end(self):
         result = interleave.get_sentences(self.edge_numbers)
         self.assertEqual(7, len(result))  # Expect seven paragraphs
