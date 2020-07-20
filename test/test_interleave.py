@@ -4,7 +4,7 @@ from unittest.mock import patch
 import textract
 
 
-class PDFTests(unittest.TestCase):
+class PDFUnitTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -26,6 +26,9 @@ class PDFTests(unittest.TestCase):
         with open('text/headers.txt', 'r') as file:
             cls.headers = file.read()
 
+        with open('text/nbsp_formfeed.txt', 'r') as file:
+            cls.nbsp_formfeed = file.read()
+
         with open('text/edge_line_start_numbers.txt', 'r') as file:
             cls.edge_numbers = file.read()
 
@@ -43,10 +46,6 @@ class PDFTests(unittest.TestCase):
 
         with open('text/edge_EPA_signature_block.txt', 'r') as file:
             cls.edge_EPA_sigblock = file.read()
-
-        cls.complex_PDF_1 = textract.process('PDFs/Complex_1.pdf', method='pdfminer').decode()
-
-        cls.complex_PDF_2 = textract.process('PDFs/Complex_2.pdf', method='pdfminer').decode()
 
         cls.split_simple_text = ['1. First Entry.', '2. Second Entry.', '3. Third Entry.']
 
@@ -89,11 +88,6 @@ class PDFTests(unittest.TestCase):
     def test_builds_paragraphs_correctly(self):
         self.assertEqual(self.split_simple_text, interleave.build_paragraph('\n\n' + self.short_text))
 
-    def test_counts_correct_amount_of_paragraphs_for_complex_documents(self):
-        result = interleave.zip_sentences(interleave.get_sentences(self.complex_PDF_1),
-                                          interleave.get_sentences(self.complex_PDF_2))
-        self.assertEqual(166, len(result))
-
     def test_splits_short_sentences(self):
         self.assertEqual(self.split_simple_text,
                          interleave.get_sentences(self.short_text))
@@ -114,6 +108,11 @@ class PDFTests(unittest.TestCase):
         self.assertNotRegex('\n'.join(interleave.get_sentences(self.headers)),
                             r'(\fC.*\d\n)')
 
+    def test_removes_nbsp_formfeed_page_breaks(self):
+        result = interleave.get_sentences(self.nbsp_formfeed)
+        self.assertNotIn(chr(160), result)
+        self.assertNotIn(chr(12), result)
+        
     def test_edge_case_line_starts_with_numeric_sentence_end(self):
         result = interleave.get_sentences(self.edge_numbers)
         self.assertEqual(7, len(result))  # Expect seven paragraphs
