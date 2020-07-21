@@ -11,7 +11,7 @@ def convert_pdf_to_txt(path):
     return text
 
 
-def build_paragraph(input_text):
+def build_paragraphs(input_text):
     matches = re.split(r'(\n\n)(\d+\.\s)', input_text)[2:]
     result = ['']
     old_paragraph_number = 0
@@ -25,19 +25,36 @@ def build_paragraph(input_text):
     return result[1:]
 
 
-def get_sentences(input_text):
+def remove_headers(input_text):
     sentences = re.sub(r'(\fC.*\d\n)', '', input_text)  # Remove Page Headers
     sentences = re.sub(r'(\n\d+ \n)', '', sentences)  # Remove Page Numbers
     sentences = re.sub(r'\n+[A-Z ]+\n+', '\n\n', sentences)  # Remove Section Titles
-    sentences = re.sub(r'([IVXCMD]+\.[A-Za-z \.\'\’\n-]+)\n(?!\dA-z)', ' \n\n',
+    sentences = re.sub(r'([IVXCMD]+\.[A-Za-z .\'’\n-]+)\n(?!\dA-z)', ' \n\n',
                        sentences)  # Remove Roman Numeral Section Titles but don't conflict with next rule
-    sentences = re.sub(r'(\n{3,}|\n\n )', '', sentences)  # Apply Consistent Paragraph Spacing
-    sentences = re.sub(r'  ', ' ', sentences)  # Apply Consistent Text Spacing
+    sentences = sentences.replace(chr(160), '\n')  # Remove nbsp Page Breaks
+    return sentences
+
+
+def prepare_body_text(input_text):
+    sentences = re.sub(r'(\n{3,}|\n\n )', '\n\n', input_text)  # Apply Consistent Paragraph Spacing
+    sentences = re.sub(r' {2}', ' ', sentences)  # Apply Consistent Text Spacing
     sentences = re.sub(r'(\S)(\n\n)([A-Za-z])', r'\1 \3', sentences)  # Handle EOL without a space
     sentences = re.sub(r'(\n\) )(1\.\s)', r'\n\n\2', sentences, 1)  # Make first paragraph match others
-    sentences = re.split(r'\n\nTable 1:', sentences)[0]  # Remove tables that follow document body
+    return sentences
+
+
+def remove_trailing_content(input_text):
+    sentences = re.split(r'\n\nTable 1:', input_text)[0]  # Remove tables that follow document body
     sentences = re.split(r'\s/s/', sentences)[0]  # Remove EPA-style signature blocks
-    return build_paragraph('\n\n' + sentences)  # \n\n to match test files with real datasets
+    sentences = re.split(r'Respectfully submitted,', sentences)[0]  # Remove EPA-style signature blocks
+    return sentences
+
+
+def sanitize_text(input_text):
+    sentences = remove_headers(input_text)
+    sentences = prepare_body_text(sentences)
+    sentences = remove_trailing_content(sentences)
+    return sentences
 
 
 def zip_sentences(list1, list2):
@@ -77,8 +94,9 @@ def main(argv):
 
         text_first_file = convert_pdf_to_txt(args.input[0])
         text_second_file = convert_pdf_to_txt(args.input[1])
-
-        filtered_text = zip_sentences(get_sentences(text_first_file), get_sentences(text_second_file))
+        # \n\n to match test files with real datasets
+        filtered_text = zip_sentences(build_paragraphs(sanitize_text(text_first_file)),
+                                      build_paragraphs(sanitize_text(text_second_file)))
         print(create_csv(filtered_text, args.output[0], (args.input[0], args.input[1])))
 
 

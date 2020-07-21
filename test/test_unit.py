@@ -1,10 +1,9 @@
 import unittest
 from src import interleave
 from unittest.mock import patch
-import textract
 
 
-class PDFTests(unittest.TestCase):
+class PDFUnitTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -18,35 +17,16 @@ class PDFTests(unittest.TestCase):
             cls.multipage_text = file.read()
 
         with open('text/1000_paragraphs.txt', 'r') as file:
-            cls.thousand_paragraphs = file.read()
+            cls.thousand_paragraphs = '\n\n' + file.read()
 
         with open('text/pagenumbers.txt', 'r') as file:
-            cls.pagenumbers = file.read()
+            cls.pagenumbers = '\n\n' + file.read()
 
         with open('text/headers.txt', 'r') as file:
-            cls.headers = file.read()
+            cls.headers = '\n\n' + file.read()
 
-        with open('text/edge_line_start_numbers.txt', 'r') as file:
-            cls.edge_numbers = file.read()
-
-        with open('text/edge_missing_paragraphs.txt', 'r') as file:
-            cls.edge_missing_paragraphs = file.read()
-
-        with open('text/edge_first_paragraph.txt', 'r') as file:
-            cls.edge_first_paragraph = file.read()
-
-        with open('text/edge_final_paragraph.txt', 'r') as file:
-            cls.edge_final_paragraph = file.read()
-
-        with open('text/edge_final_paragraph.txt', 'r') as file:
-            cls.edge_final_paragraph = file.read()
-
-        with open('text/edge_EPA_signature_block.txt', 'r') as file:
-            cls.edge_EPA_sigblock = file.read()
-
-        cls.complex_PDF_1 = textract.process('PDFs/Complex_1.pdf', method='pdfminer').decode()
-
-        cls.complex_PDF_2 = textract.process('PDFs/Complex_2.pdf', method='pdfminer').decode()
+        with open('text/nbsp_formfeed.txt', 'r') as file:
+            cls.nbsp_formfeed = '\n\n' + file.read()
 
         cls.split_simple_text = ['1. First Entry.', '2. Second Entry.', '3. Third Entry.']
 
@@ -70,10 +50,6 @@ class PDFTests(unittest.TestCase):
                               ('2. Second Entry.', '2. Second Entry.'),
                               ('3. Third Entry.', '3. Third Entry.')]
 
-        cls.table_title = 'Table 1: PMNs for which EPA untimely published notice of receipt in the Federal Register'
-
-        cls.EPA_signature = '/s/'
-
     def test_opens_PDF(self):
         self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('PDFs/Simple.pdf'))
 
@@ -84,63 +60,44 @@ class PDFTests(unittest.TestCase):
         self.assertEqual(self.multipage_text, interleave.convert_pdf_to_txt('PDFs/Multipage.pdf'))
 
     def test_counts_up_to_1000_paragraphs(self):
-        self.assertEqual(1000, len(interleave.get_sentences(self.thousand_paragraphs)))
+        result = interleave.build_paragraphs(interleave.sanitize_text(self.thousand_paragraphs))
+        self.assertEqual(1000, len(result))
 
     def test_builds_paragraphs_correctly(self):
-        self.assertEqual(self.split_simple_text, interleave.build_paragraph('\n\n' + self.short_text))
-
-    def test_counts_correct_amount_of_paragraphs_for_complex_documents(self):
-        result = interleave.zip_sentences(interleave.get_sentences(self.complex_PDF_1),
-                                          interleave.get_sentences(self.complex_PDF_2))
-        self.assertEqual(166, len(result))
+        self.assertEqual(self.split_simple_text, interleave.build_paragraphs('\n\n' + self.short_text))
 
     def test_splits_short_sentences(self):
-        self.assertEqual(self.split_simple_text,
-                         interleave.get_sentences(self.short_text))
+        result = interleave.build_paragraphs(interleave.sanitize_text('\n\n' + self.short_text))
+        self.assertEqual(self.split_simple_text, result)
 
     def test_splits_multiline_sentences(self):
-        self.assertEqual(self.split_multiline_text,
-                         interleave.get_sentences(self.multiline_text))
+        result = interleave.build_paragraphs(interleave.sanitize_text('\n\n' + self.multiline_text))
+        self.assertEqual(self.split_multiline_text, result)
 
     def test_splits_multipage_paragraphs(self):
-        self.assertEqual(self.split_multipage_text,
-                         interleave.get_sentences(self.multipage_text))
+        result = interleave.build_paragraphs(interleave.sanitize_text('\n\n' + self.multipage_text))
+        self.assertEqual(self.split_multipage_text, result)
 
     def test_removes_page_numbers(self):
-        self.assertNotRegex('\n'.join(interleave.get_sentences(self.pagenumbers)),
+        self.assertNotRegex('\n'.join(interleave.sanitize_text(self.pagenumbers)),
                             r'\n\d+ \n')
 
     def test_removes_page_headers(self):
-        self.assertNotRegex('\n'.join(interleave.get_sentences(self.headers)),
+        self.assertNotRegex('\n'.join(interleave.sanitize_text(self.headers)),
                             r'(\fC.*\d\n)')
 
-    def test_edge_case_line_starts_with_numeric_sentence_end(self):
-        result = interleave.get_sentences(self.edge_numbers)
-        self.assertEqual(7, len(result))  # Expect seven paragraphs
-
-    def test_edge_case_missing_paragraphs(self):
-        result = interleave.get_sentences(self.edge_missing_paragraphs)
-        self.assertEqual(7, len(result))  # Expect seven paragraphs
-
-    def test_edge_case_isolate_first_paragraph(self):
-        result = interleave.get_sentences(self.edge_first_paragraph)
-        self.assertEqual(1, len(result))
-
-    def test_edge_case_ignore_trailing_tables(self):
-        result = interleave.get_sentences(self.edge_final_paragraph)[0]
-        self.assertNotIn(self.table_title, result)
-
-    def test_edge_case_strip_EPA_style_sigblock(self):
-        result = interleave.get_sentences(self.edge_EPA_sigblock)
-        self.assertNotIn(self.EPA_signature, result)
+    def test_removes_nbsp_formfeed_page_breaks(self):
+        result = interleave.sanitize_text(self.nbsp_formfeed)
+        self.assertNotIn(chr(160), result)
+        self.assertNotIn(chr(12), result)
 
     def test_zip_sentences_to_tuple(self):
-        list1 = self.short_text
-        list2 = self.short_text
+        list1 = '\n\n' + self.short_text
+        list2 = '\n\n' + self.short_text
 
         self.assertEqual(self.processed_text,
-                         interleave.zip_sentences(interleave.get_sentences(list1),
-                                                  interleave.get_sentences(list2)))
+                         interleave.zip_sentences(interleave.build_paragraphs(interleave.sanitize_text(list1)),
+                                                  interleave.build_paragraphs(interleave.sanitize_text(list2))))
 
     @patch('builtins.open')
     @patch('src.interleave.writer', autospec=True)
