@@ -4,6 +4,7 @@ from unittest.mock import patch
 from random import randint
 
 
+
 class PDFUnitTests(unittest.TestCase):
 
     @classmethod
@@ -145,7 +146,7 @@ class PDFUnitTests(unittest.TestCase):
     def test_edge_case_strip_EPA_sigblock_2(self):
         result = '\n'.join(interleave.sanitize_text(self.edge_EPA_sigblock_2))
         self.assertNotIn(self.EPA_signature_2, result)
-
+        
     def test_zip_sentences_to_tuple(self):
         list1 = '\n\n' + self.short_text
         list2 = '\n\n' + self.short_text
