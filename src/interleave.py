@@ -29,7 +29,7 @@ def remove_headers(input_text):
     sentences = re.sub(r'(\fC.*\d\n)', '', input_text)  # Remove Page Headers
     sentences = re.sub(r'(\n\d+ \n)', '', sentences)  # Remove Page Numbers
     sentences = re.sub(r'\n+[A-Z ]+\n+', '\n\n', sentences)  # Remove Section Titles
-    sentences = re.sub(r'([IVXCMD]+\.[A-Za-z \.\'\’\n-]+)\n(?!\dA-z)', ' \n\n',
+    sentences = re.sub(r'([IVXCMD]+\.[A-Za-z .\'’\n-]+)\n(?!\dA-z)', ' \n\n',
                        sentences)  # Remove Roman Numeral Section Titles but don't conflict with next rule
     sentences = sentences.replace(chr(160), '\n')  # Remove nbsp Page Breaks
     return sentences
@@ -37,7 +37,7 @@ def remove_headers(input_text):
 
 def prepare_body_text(input_text):
     sentences = re.sub(r'(\n{3,}|\n\n )', '\n\n', input_text)  # Apply Consistent Paragraph Spacing
-    sentences = re.sub(r'  ', ' ', sentences)  # Apply Consistent Text Spacing
+    sentences = re.sub(r' {2}', ' ', sentences)  # Apply Consistent Text Spacing
     sentences = re.sub(r'(\S)(\n\n)([A-Za-z])', r'\1 \3', sentences)  # Handle EOL without a space
     sentences = re.sub(r'(\n\) )(1\.\s)', r'\n\n\2', sentences, 1)  # Make first paragraph match others
     return sentences
