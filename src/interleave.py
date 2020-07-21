@@ -95,8 +95,8 @@ def main(argv):
         text_first_file = convert_pdf_to_txt(args.input[0])
         text_second_file = convert_pdf_to_txt(args.input[1])
         # \n\n to match test files with real datasets
-        filtered_text = zip_sentences(build_paragraphs('\n\n' + sanitize_text(text_first_file)),
-                                      build_paragraphs('\n\n' + sanitize_text(text_second_file)))
+        filtered_text = zip_sentences(build_paragraphs(sanitize_text(text_first_file)),
+                                      build_paragraphs(sanitize_text(text_second_file)))
         print(create_csv(filtered_text, args.output[0], (args.input[0], args.input[1])))
 
 

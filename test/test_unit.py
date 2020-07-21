@@ -17,16 +17,16 @@ class PDFUnitTests(unittest.TestCase):
             cls.multipage_text = file.read()
 
         with open('text/1000_paragraphs.txt', 'r') as file:
-            cls.thousand_paragraphs = file.read()
+            cls.thousand_paragraphs = '\n\n' + file.read()
 
         with open('text/pagenumbers.txt', 'r') as file:
-            cls.pagenumbers = file.read()
+            cls.pagenumbers = '\n\n' + file.read()
 
         with open('text/headers.txt', 'r') as file:
-            cls.headers = file.read()
+            cls.headers = '\n\n' + file.read()
 
         with open('text/nbsp_formfeed.txt', 'r') as file:
-            cls.nbsp_formfeed = file.read()
+            cls.nbsp_formfeed = '\n\n' + file.read()
 
         cls.split_simple_text = ['1. First Entry.', '2. Second Entry.', '3. Third Entry.']
 
@@ -60,7 +60,7 @@ class PDFUnitTests(unittest.TestCase):
         self.assertEqual(self.multipage_text, interleave.convert_pdf_to_txt('PDFs/Multipage.pdf'))
 
     def test_counts_up_to_1000_paragraphs(self):
-        result = interleave.build_paragraphs(interleave.sanitize_text('\n\n' + self.thousand_paragraphs))
+        result = interleave.build_paragraphs(interleave.sanitize_text(self.thousand_paragraphs))
         self.assertEqual(1000, len(result))
 
     def test_builds_paragraphs_correctly(self):
@@ -87,10 +87,9 @@ class PDFUnitTests(unittest.TestCase):
                             r'(\fC.*\d\n)')
 
     def test_removes_nbsp_formfeed_page_breaks(self):
-        result = interleave.build_paragraphs(interleave.sanitize_text('\n\n' + self.nbsp_formfeed))
+        result = interleave.sanitize_text(self.nbsp_formfeed)
         self.assertNotIn(chr(160), result)
         self.assertNotIn(chr(12), result)
-        self.assertEqual(2, len(result))
 
     def test_zip_sentences_to_tuple(self):
         list1 = '\n\n' + self.short_text
