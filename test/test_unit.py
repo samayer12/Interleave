@@ -1,6 +1,8 @@
 import unittest
 from src import interleave
 from unittest.mock import patch
+from random import randint
+
 
 
 class PDFUnitTests(unittest.TestCase):
@@ -28,6 +30,24 @@ class PDFUnitTests(unittest.TestCase):
         with open('text/nbsp_formfeed.txt', 'r') as file:
             cls.nbsp_formfeed = '\n\n' + file.read()
 
+        with open('text/edge_EPA_signature_block_1.txt', 'r') as file:
+            cls.edge_EPA_sigblock_1 = file.read()
+
+        with open('text/edge_EPA_signature_block_2.txt', 'r') as file:
+            cls.edge_EPA_sigblock_2 = file.read()
+
+        with open('text/paragraph_variable_spacing.txt', 'r') as file:
+            cls.paragraph_variable_spaced = file.read()
+
+        with open('text/roman_numerals.txt', 'r') as file:
+            cls.roman_numerals = file.read()
+
+        with open('text/section_titles.txt', 'r') as file:
+            cls.section_titles = file.read()
+
+        with open('text/trailing_table.txt', 'r') as file:
+            cls.trailing_table = file.read()
+
         cls.split_simple_text = ['1. First Entry.', '2. Second Entry.', '3. Third Entry.']
 
         cls.split_multiline_text = ['1. First Entry. This is a really long entry. It spans multiple lines. Very long. '
@@ -49,6 +69,10 @@ class PDFUnitTests(unittest.TestCase):
         cls.processed_text = [('1. First Entry.', '1. First Entry.'),
                               ('2. Second Entry.', '2. Second Entry.'),
                               ('3. Third Entry.', '3. Third Entry.')]
+
+        cls.EPA_signature_1 = '/s/'
+
+        cls.EPA_signature_2 = 'Respectfully submitted,'
 
     def test_opens_PDF(self):
         self.assertEqual(self.short_text, interleave.convert_pdf_to_txt('PDFs/Simple.pdf'))
@@ -86,11 +110,43 @@ class PDFUnitTests(unittest.TestCase):
         self.assertNotRegex('\n'.join(interleave.sanitize_text(self.headers)),
                             r'(\fC.*\d\n)')
 
+    def test_removes_section_titles(self):
+        result = (interleave.remove_headers(self.section_titles)).split('\n\n')
+        self.assertEqual(18, len(result))
+        self.assertNotIn('\n', result)
+
+    def test_removes_roman_numerals(self):
+        result = interleave.remove_headers(self.roman_numerals)
+        self.assertNotRegex(result, r'[IVXCMD]+\.')
+
     def test_removes_nbsp_formfeed_page_breaks(self):
         result = interleave.sanitize_text(self.nbsp_formfeed)
         self.assertNotIn(chr(160), result)
         self.assertNotIn(chr(12), result)
 
+    def test_applies_consistent_paragraph_spacing(self):
+        result = (interleave.prepare_body_text(self.paragraph_variable_spaced)).split('\n\n')
+        self.assertEqual(5, len(result))
+        self.assertNotIn('\n', result)
+
+    def test_applies_consistent_text_spacing(self):
+        result = interleave.prepare_body_text('first second' + (' ' * randint(2, 1024))
+                                              + 'third  fourth')
+        self.assertNotRegex(result, r' {2,}')
+
+    def test_removes_tables_after_doc_body(self):
+        result = interleave.remove_trailing_content(self.trailing_table)
+        self.assertNotIn('Table 1:', result)
+        self.assertEqual(2, len(result.split('\n\n')))
+
+    def test_edge_case_strip_EPA_sigblock_1(self):
+        result = '\n'.join(interleave.sanitize_text(self.edge_EPA_sigblock_1))
+        self.assertNotIn(self.EPA_signature_1, result)
+
+    def test_edge_case_strip_EPA_sigblock_2(self):
+        result = '\n'.join(interleave.sanitize_text(self.edge_EPA_sigblock_2))
+        self.assertNotIn(self.EPA_signature_2, result)
+        
     def test_zip_sentences_to_tuple(self):
         list1 = '\n\n' + self.short_text
         list2 = '\n\n' + self.short_text
