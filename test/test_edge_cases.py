@@ -20,6 +20,9 @@ class PDFEdgeCases(unittest.TestCase):
         with open('text/edge_final_paragraph.txt', 'r') as file:
             cls.edge_final_paragraph = file.read()
 
+        with open('text/edge_bad_parse.txt', 'r') as file:
+            cls.edge_bad_parse = file.read()
+
         cls.table_title = 'Table 1: PMNs for which EPA untimely published notice of receipt in the Federal Register'
 
         
@@ -39,6 +42,10 @@ class PDFEdgeCases(unittest.TestCase):
         result = interleave.sanitize_text(self.edge_final_paragraph)[0]
         self.assertNotIn(self.table_title, result)
 
+    def test_edge_marks_bad_paragraph_parse(self):
+        result = interleave.build_paragraphs(interleave.sanitize_text('\n\n' + self.edge_bad_parse))
+        self.assertEqual(3, len(result))
+        self.assertIn('2. PARSE ERROR', result)
 
 if __name__ == '__main__':
     unittest.main()
