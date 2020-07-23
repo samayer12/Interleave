@@ -25,6 +25,7 @@ class PDFEdgeCases(unittest.TestCase):
 
         cls.table_title = 'Table 1: PMNs for which EPA untimely published notice of receipt in the Federal Register'
 
+        
     def test_edge_case_line_starts_with_numeric_sentence_end(self):
         result = interleave.build_paragraphs(interleave.sanitize_text('\n\n' + self.edge_numbers))
         self.assertEqual(7, len(result))  # Expect seven paragraphs
