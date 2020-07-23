@@ -17,10 +17,14 @@ def build_paragraphs(input_text):
     old_paragraph_number = 0
     for i in range(0, len(matches), 3):
         paragraph_number = int(matches[i].split('.')[0])
+        current_line = re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip())
+
         if paragraph_number != old_paragraph_number + 1:
-            result[-1] += re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip())
+            result[-1] += current_line
         else:
-            result.append(re.sub(r'[\n\f]', '', ''.join(matches[i:i + 2]).strip()))
+            if current_line[:-1].isdigit():
+                current_line += ' PARSE ERROR'
+            result.append(current_line)
             old_paragraph_number = paragraph_number
     return result[1:]
 
