@@ -116,7 +116,7 @@ class PDFUnitTests(unittest.TestCase):
         self.assertNotIn('\n', result)
 
     def test_removes_roman_numerals(self):
-        result = interleave.remove_headers(self.roman_numerals)
+        result = interleave.remove_headers('\n\n' + self.roman_numerals)
         self.assertNotRegex(result, r'[IVXCMD]+\.')
 
     def test_removes_nbsp_formfeed_page_breaks(self):
