@@ -23,7 +23,7 @@ class PDFEdgeCases(unittest.TestCase):
         with open('text/edge_bad_parse.txt', 'r') as file:
             cls.edge_bad_parse = file.read()
 
-        with open('text/edge_complex_7.txt', 'r') as file:
+        with open('text/edge_nonroman_CD.txt', 'r') as file:
             cls.edge_complex_7 = file.read()
 
         cls.table_title = 'Table 1: PMNs for which EPA untimely published notice of receipt in the Federal Register'
