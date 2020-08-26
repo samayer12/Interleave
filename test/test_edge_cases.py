@@ -50,7 +50,7 @@ class PDFEdgeCases(unittest.TestCase):
         self.assertEqual(3, len(result))
         self.assertIn('2. PARSE ERROR', result)
 
-    def test_edge_complex_7(self):
+    def test_edge_valid_nonroman_string(self):
         result = interleave.build_paragraphs(interleave.sanitize_text('\n\n' + self.edge_complex_7))
         self.assertEqual(4, len(result))
 
