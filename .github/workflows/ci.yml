@@ -38,9 +38,7 @@ jobs:
         if [ -f requirements.txt]; then pip install -r requirements.txt; fi
 
     - name: Unit Tests
-      run: |
-        cd test
-        pytest test_unit.py test_edge_cases.py
+      run: pytest test_unit.py test_edge_cases.py
 
     - name: End-to-end Tests
-      run: pytest test_journey.py
+      run: pytest test/test_journey.py
