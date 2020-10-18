@@ -9,7 +9,7 @@ jobs:
     steps:
       -uses: actions/checkout@v2
       -name: Setup Python 3.8
-       uses: actions/setup-python@v2
+        uses: actions/setup-python@v2
       with:
         python-version: 3.8
       - name: Install dependencies
@@ -17,10 +17,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install flake8 pytest chardet textract
           if [ -f requirements.txt]; then pip install -r requirements.txt; fi
+
       - name: flake8
         run: flake8 ./src --max-line-length=120 --show-source --statistics
+
       - name: pylint
         run: pylint ./src
+
       - name: mypy
         run: mypy ./src
 
@@ -38,6 +41,7 @@ jobs:
             python -m pip install --upgrade pip
             pip install flake8 pytest chardet textract
             if [ -f requirements.txt]; then pip install -r requirements.txt; fi
+
     - name: Unit Tests
       run: |
         cd test
