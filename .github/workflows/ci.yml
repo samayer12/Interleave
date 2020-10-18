@@ -45,4 +45,4 @@ jobs:
     - name: End-to-end Tests
       run: |
         cd test
-        pytest test/test_journey.py
+        pytest test_journey.py
