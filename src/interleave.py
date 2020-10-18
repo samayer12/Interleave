@@ -41,7 +41,7 @@ def remove_headers(input_text: str) -> str:
     sentences = re.sub(r'(\n\d+ \n)', '', sentences)  # Remove Page Numbers
     sentences = re.sub(r'\n+[A-Z ]+\n+', '\n\n', sentences)  # Remove Section Titles
     # Remove Roman Numeral Section Titles but allow words like "CD." and "U.S.C."
-    sentences = re.sub(r'([^\w \.][IVXCMD]+\.[A-Za-z .\'’\n-]+)\n(?!\dA-z)', '\n',
+    sentences = re.sub(r'([^\w .][IVXCMD]+\.[A-Za-z .\'’\n-]+)\n(?!\dA-z)', '\n',
                        sentences)
     sentences = sentences.replace(chr(160), '\n')  # Remove nbsp Page Breaks
     return sentences
