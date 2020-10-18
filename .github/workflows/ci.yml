@@ -60,7 +60,7 @@ jobs:
         python-version: 3.8
     - name: Install dependencies
       run: |
-        sudo apt install nuitka3
+        sudo apt install nuitka
         python -m pip install --upgrade pip
         pip install pytest textract
         if [ -f requirements.txt]; then pip install -r requirements.txt; fi
