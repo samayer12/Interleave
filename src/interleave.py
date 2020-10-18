@@ -2,16 +2,18 @@ import argparse
 import sys
 from csv import writer
 import re
-import textract
 import itertools
+import textract
 
 
 def convert_pdf_to_txt(path):
+    """Represent .pdf as .txt"""
     text = textract.process(path, method='pdfminer').decode()
     return text
 
 
 def build_paragraphs(input_text):
+    """Create a list of paragraphs from a string of sentences"""
     matches = re.split(r'(\n\n)(\d+\.\s)', input_text)[2:]
     result = ['']
     old_paragraph_number = 0
@@ -30,6 +32,7 @@ def build_paragraphs(input_text):
 
 
 def remove_headers(input_text):
+    """Strip section headers and other titles"""
     sentences = re.sub(r'(\fC.*\d\n)', '', input_text)  # Remove Page Headers
     sentences = re.sub(r'(\n\d+ \n)', '', sentences)  # Remove Page Numbers
     sentences = re.sub(r'\n+[A-Z ]+\n+', '\n\n', sentences)  # Remove Section Titles
@@ -41,6 +44,7 @@ def remove_headers(input_text):
 
 
 def prepare_body_text(input_text):
+    """Take raw sentences and standardize them"""
     sentences = re.sub(r'(\n{3,}|\n\n )', '\n\n', input_text)  # Apply Consistent Paragraph Spacing
     sentences = re.sub(r' {2,}', ' ', sentences)  # Apply Consistent Text Spacing
     sentences = re.sub(r'(\S)(\n\n)([A-Za-z])', r'\1 \3', sentences)  # Handle EOL without a space
@@ -49,6 +53,7 @@ def prepare_body_text(input_text):
 
 
 def remove_trailing_content(input_text):
+    """Remove content that comes after the last paragraph (such as Tables)"""
     sentences = re.split(r'\n\nTable 1:', input_text)[0]  # Remove tables that follow document body
     sentences = re.split(r'\s/s/', sentences)[0]  # Remove EPA-style signature blocks
     sentences = re.split(r'Respectfully submitted,', sentences)[0]  # Remove EPA-style signature blocks
@@ -56,6 +61,7 @@ def remove_trailing_content(input_text):
 
 
 def sanitize_text(input_text):
+    """Turn raw input into properly-formatted sentences"""
     sentences = remove_headers(input_text)
     sentences = prepare_body_text(sentences)
     sentences = remove_trailing_content(sentences)
@@ -63,10 +69,12 @@ def sanitize_text(input_text):
 
 
 def zip_sentences(list1, list2):
+    """Create a matched-pairs list of all sentences between two lists"""
     return list(itertools.zip_longest(list1, list2))
 
 
 def create_csv(data, path, source_tuple):
+    """Write data to a .csv file"""
     with open(path, 'w', newline='') as csvfile:
         writer(csvfile, delimiter=',').writerows([source_tuple])
         writer(csvfile, delimiter=',').writerows(data)
@@ -74,12 +82,13 @@ def create_csv(data, path, source_tuple):
 
 
 def main(argv):
+    """Receive .pdfs and input and generate matched-pairs list of paragraphs."""
     parser = argparse.ArgumentParser(description='Match numbered paragraphs from a PDF and store them in a CSV file.')
     parser.add_argument('input', metavar='I', type=str, nargs=2, help='two files to match and store')
     parser.add_argument('output', metavar='O', type=str, nargs=1, help='name of output file')
     parser.add_argument('-r', '--raw', default=False, action='store_true', help='convert PDFs to raw text')
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     print('\nColumn A source: ' + args.input[0] +
           '\nColumn B source: ' + args.input[1])
