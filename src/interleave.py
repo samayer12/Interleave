@@ -3,6 +3,7 @@ A side-project to do some .pdf processing for a friend.
 Example Usage: `python interleave.py file1.pdf file2.pdf output.csv`
 """
 import argparse
+from typing import List, Tuple
 import sys
 from csv import writer
 import re
@@ -10,13 +11,12 @@ import itertools
 import textract # type: ignore
 
 
-def convert_pdf_to_txt(path):
+def convert_pdf_to_txt(path: str) -> str:
     """Represent .pdf as .txt"""
-    text = textract.process(path, method='pdfminer').decode()
-    return text
+    return str(textract.process(path, method='pdfminer').decode())
 
 
-def build_paragraphs(input_text):
+def build_paragraphs(input_text: str) -> List[str]:
     """Create a list of paragraphs from a string of sentences"""
     matches = re.split(r'(\n\n)(\d+\.\s)', input_text)[2:]
     result = ['']
@@ -35,7 +35,7 @@ def build_paragraphs(input_text):
     return result[1:]
 
 
-def remove_headers(input_text):
+def remove_headers(input_text: str) -> str:
     """Strip section headers and other titles"""
     sentences = re.sub(r'(\fC.*\d\n)', '', input_text)  # Remove Page Headers
     sentences = re.sub(r'(\n\d+ \n)', '', sentences)  # Remove Page Numbers
@@ -47,7 +47,7 @@ def remove_headers(input_text):
     return sentences
 
 
-def prepare_body_text(input_text):
+def prepare_body_text(input_text: str) -> str:
     """Take raw sentences and standardize them"""
     sentences = re.sub(r'(\n{3,}|\n\n )', '\n\n', input_text)  # Apply Consistent Paragraph Spacing
     sentences = re.sub(r' {2,}', ' ', sentences)  # Apply Consistent Text Spacing
@@ -56,7 +56,7 @@ def prepare_body_text(input_text):
     return sentences
 
 
-def remove_trailing_content(input_text):
+def remove_trailing_content(input_text: str) -> str:
     """Remove content that comes after the last paragraph (such as Tables)"""
     sentences = re.split(r'\n\nTable 1:', input_text)[0]  # Remove tables that follow document body
     sentences = re.split(r'\s/s/', sentences)[0]  # Remove EPA-style signature blocks
@@ -64,7 +64,7 @@ def remove_trailing_content(input_text):
     return sentences
 
 
-def sanitize_text(input_text):
+def sanitize_text(input_text: str) -> str:
     """Turn raw input into properly-formatted sentences"""
     sentences = remove_headers(input_text)
     sentences = prepare_body_text(sentences)
@@ -72,12 +72,12 @@ def sanitize_text(input_text):
     return sentences
 
 
-def zip_sentences(list1, list2):
+def zip_sentences(list1: List[str], list2: List[str]) -> List[str]:
     """Create a matched-pairs list of all sentences between two lists"""
     return list(itertools.zip_longest(list1, list2))
 
 
-def create_csv(data, path, source_tuple):
+def create_csv(data: List[str], path: str, source_tuple: Tuple[str, str]) -> str:
     """Write data to a .csv file"""
     with open(path, 'w', newline='') as csvfile:
         writer(csvfile, delimiter=',').writerows([source_tuple])
@@ -85,7 +85,7 @@ def create_csv(data, path, source_tuple):
     return 'Files created.'
 
 
-def main(argv):
+def main(argv: List[str]) -> None:
     """Receive .pdfs and input and generate matched-pairs list of paragraphs."""
     parser = argparse.ArgumentParser(description='Match numbered paragraphs from a PDF and store them in a CSV file.')
     parser.add_argument('input', metavar='I', type=str, nargs=2, help='two files to match and store')
