@@ -17,7 +17,7 @@ jobs:
         pip install flake8 pytest chardet textract
         if [ -f requirements.txt]; then pip install -r requirements.txt; fi
     - name: flake8
-      run: flake8 ./src --max-line-length=120 --show-source --statistics
+      run: flake8 src --max-line-length=120 --show-source --statistics
     - name: pylint
       run: pylint ./src
     - name: mypy
