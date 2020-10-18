@@ -65,4 +65,4 @@ jobs:
         pip install pytest textract
         if [ -f requirements.txt]; then pip install -r requirements.txt; fi
     - name: nuitka
-      run: nuitka --standalone --python-version=3.8 src/interleave.py
+      run: nuitka3 --standalone --python-version=3.8 src/interleave.py
