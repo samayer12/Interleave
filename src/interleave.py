@@ -1,3 +1,7 @@
+"""
+A side-project to do some .pdf processing for a friend.
+Example Usage: `python interleave.py file1.pdf file2.pdf output.csv`
+"""
 import argparse
 import sys
 from csv import writer
