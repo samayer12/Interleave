@@ -37,6 +37,9 @@ jobs:
         pip install pytest textract
         if [ -f requirements.txt]; then pip install -r requirements.txt; fi
 
+    - name: Doctest
+      run: python -m doctest -v src/interleave.py
+
     - name: Unit Tests
       run: |
         cd test
