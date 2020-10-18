@@ -43,4 +43,6 @@ jobs:
         pytest test_unit.py test_edge_cases.py
 
     - name: End-to-end Tests
-      run: pytest test/test_journey.py
+      run: |
+        cd test
+        pytest test/test_journey.py
