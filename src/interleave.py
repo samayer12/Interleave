@@ -8,7 +8,7 @@ import sys
 from csv import writer
 import re
 import itertools
-import textract # type: ignore
+import textract  # type: ignore
 
 
 def convert_pdf_to_txt(path: str) -> str:
