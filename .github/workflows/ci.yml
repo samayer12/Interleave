@@ -21,7 +21,7 @@ jobs:
     - name: pylint
       run: pylint ./src --rcfile=.pylintrc
     - name: mypy
-      run: mypy ./src
+      run: mypy ./src --strict
 
   tests:
     runs-on: ubuntu-latest
