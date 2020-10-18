@@ -76,7 +76,10 @@ def sanitize_text(input_text: str) -> str:
 
 
 def zip_sentences(list1: List[str], list2: List[str]) -> List[str]:
-    """Create a matched-pairs list of all sentences between two lists"""
+    """Create a matched-pairs list of all sentences between two lists
+    >>> zip_sentences(["1. First", "2. Second"], ["1. First", "2. Second"])
+    [('1. First', '1. First'), ('2. Second', '2. Second')]
+    """
     return list(itertools.zip_longest(list1, list2))
 
 
