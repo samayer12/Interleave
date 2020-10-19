@@ -76,9 +76,9 @@ jobs:
         name: nuitka_output
         path: interleave.dist/
     - uses: actions/upload-artifact@master
-          with:
-            name: zip_output
-            path: ./*.zip
+      with:
+        name: zip_output
+        path: ./*.zip
 
   release-windows:
     runs-on: windows-latest
