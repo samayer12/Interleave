@@ -73,8 +73,12 @@ jobs:
         zip -ll Interleave_Unix.zip README.md src/interleave.py
     - uses: actions/upload-artifact@master
       with:
-        name: nix_output
-        path: nix_output
+        name: nuitka_output
+        path: interleave.dist/
+    - uses: actions/upload-artifact@master
+          with:
+            name: zip_output
+            path: ./*.zip
 
   release-windows:
     runs-on: windows-latest
