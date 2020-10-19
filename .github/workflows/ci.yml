@@ -66,11 +66,18 @@ jobs:
     - name: nuitka
       run: |
         python -m nuitka --standalone src/interleave.py
-        ls -l
+      uses: actions/upload-artifact@master
+        with:
+          name: nuitka_output
+          path: nuitka_output
     - name: zip
       run: |
         zip -l Interleave_Windows.zip README.md src/interleave.py
         zip -ll Interleave_Unix.zip README.md src/interleave.py
+      uses: actions/upload-artifact@master
+        with:
+          name: zip_output
+          path: zip_output
 
   release-windows:
     runs-on: windows-latest
@@ -90,3 +97,7 @@ jobs:
           }
       - name: pyinstaller
         run: pyinstaller src/interleave.py
+        uses: actions/upload-artifact@master
+          with:
+            name: windows_output
+            path: windows_output
