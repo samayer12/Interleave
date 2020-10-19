@@ -50,7 +50,7 @@ jobs:
         cd test
         pytest test_journey.py
 
-  release:
+  release-nix:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -67,3 +67,21 @@ jobs:
       run: |
         python -m nuitka --standalone src/interleave.py
         ls -l
+    - name: zip
+      run: |
+        zip -l Interleave_Windows.zip README.md src/interleave.py
+        zip -ll Interleave_Unix.zip README.md src/interleave.py
+
+  release-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkour@v2
+      - name Setup Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest textract nuitka
+          pip install -r requirements.txt
