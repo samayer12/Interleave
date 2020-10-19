@@ -101,4 +101,4 @@ jobs:
       - uses: actions/upload-artifact@master
         with:
           name: windows_output
-          path: windows_output
+          path: dist/
