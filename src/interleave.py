@@ -18,8 +18,8 @@ def convert_pdf_to_txt(path: str) -> str:
 
 def build_paragraphs(input_text: str) -> List[str]:
     """Create a list of paragraphs from a string of sentences
-    >>> build_paragraphs("Header\\n\\n1. First. Second. Third.")
-    ['1. First. Second. Third.']
+    >>> build_paragraphs("Header\\n\\n1. First.\\n\\n2. Second.\\n\\n3. Third.")
+    ['1. First.', '2. Second.', '3. Third.']
     """
     matches = re.split(r'(\n\n)(\d+\.\s)', input_text)[2:]
     result = ['']
