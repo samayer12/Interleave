@@ -64,6 +64,7 @@ jobs:
         pip install pytest textract pytest-cov
         if [ -f requirements.txt]; then pip install -r requirements.txt; fi
     - name: Coverage
+      run: |
         cd test/
         pytest --cov=src --cov-report term-missing --cov-fail-under=80
         
