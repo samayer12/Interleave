@@ -63,6 +63,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest textract nuitka pytest-cov
         if [ -f requirements.txt]; then pip install -r requirements.txt; fi
+        cd test/
         pytest --cov=src --cov-report term-missing --cov-fail-under=80
         
   release-nix:
