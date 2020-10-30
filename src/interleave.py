@@ -111,6 +111,18 @@ def create_csv(data: List[str], path: str, source_tuple: Tuple[str, str]) -> str
     return 'Files created.'
 
 
+def produce_raw_output(dest_1, dest_2):
+    doc_1_dest = '../output/' + dest_1.split('/')[-1].split('.')[0] + '.txt'
+    doc_2_dest = '../output/' + dest_2.split('/')[-1].split('.')[0] + '.txt'
+    with open(doc_1_dest, 'w') as file:
+        file.write(convert_pdf_to_txt(doc_1_dest))
+    with open(doc_2_dest, 'w') as file:
+        file.write(convert_pdf_to_txt(doc_2_dest))
+    return ('\nStored inputs as raw text.' +
+            '\nDocument 1 destination: ' + doc_1_dest +
+            '\nDocument 2 destination: ' + doc_2_dest)
+
+
 def main(argv: List[str]) -> None:
     """Receive .pdfs and input and generate matched-pairs list of paragraphs.
 
@@ -128,15 +140,7 @@ def main(argv: List[str]) -> None:
           '\nColumn B source: ' + args.input[1])
 
     if args.raw:
-        doc_1_dest = '../output/' + args.input[0].split('/')[-1].split('.')[0] + '.txt'
-        doc_2_dest = '../output/' + args.input[1].split('/')[-1].split('.')[0] + '.txt'
-        print('\nStoring inputs as raw text.' +
-              '\nDocument 1 destination: ' + doc_1_dest +
-              '\nDocument 2 destination: ' + doc_2_dest)
-        with open(doc_1_dest, 'w') as file:
-            file.write(convert_pdf_to_txt(args.input[0]))
-        with open(doc_2_dest, 'w') as file:
-            file.write(convert_pdf_to_txt(args.input[1]))
+        print(produce_raw_output(args.input[0], args.input[1]))
     else:
         print('\nOutput File: ' + args.output[0] + '\n')
 

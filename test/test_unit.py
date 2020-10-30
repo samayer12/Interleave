@@ -162,6 +162,17 @@ class PDFUnitTests(unittest.TestCase):
         self.assertEqual(1, mock_open.call_count)
         self.assertEqual(2, mock_writer.call_count)
 
+    @patch('builtins.open')
+    @patch('src.interleave.convert_pdf_to_txt')
+    def test_produce_raw_output_informs_if_raw_option_set(self, spy_open, spy_convert_pdf_to_txt):
+        expected = '\nStored inputs as raw text.' \
+                   '\nDocument 1 destination: ../output/myfile.txt' \
+                   '\nDocument 2 destination: ../output/myfile2.txt'
+
+        result = interleave.produce_raw_output('/mypath/myfile.txt', '/mypath2/myfile2.txt')
+
+        self.assertEqual(expected, result)
+        self.assertEqual(2, spy_convert_pdf_to_txt.call_count)
 
 if __name__ == '__main__':
     loader = unittest.TestLoader()
