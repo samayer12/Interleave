@@ -1,13 +1,14 @@
-"""
-A side-project to do some .pdf processing for a friend.
+"""A side-project to do some .pdf processing for a friend.
+
 Example Usage: `python interleave.py file1.pdf file2.pdf output.csv`
 """
 import argparse
-from typing import List, Tuple
+import itertools
+import re
 import sys
 from csv import writer
-import re
-import itertools
+from typing import List, Tuple
+
 import textract  # type: ignore
 
 
@@ -18,6 +19,7 @@ def convert_pdf_to_txt(path: str) -> str:
 
 def build_paragraphs(input_text: str) -> List[str]:
     """Create a list of paragraphs from a string of sentences
+
     >>> build_paragraphs("Header\\n\\n1. First.\\n\\n2. Second.\\n\\n3. Third.")
     ['1. First.', '2. Second.', '3. Third.']
     """
@@ -68,7 +70,11 @@ def remove_trailing_content(input_text: str) -> str:
 
 
 def sanitize_text(input_text: str) -> str:
-    """Turn raw input into properly-formatted sentences"""
+    """Turn raw input into properly-formatted sentences.
+
+    :param input_text: Unsanitized text from PDF parsing
+    :return: Cleaner text
+    """
     sentences = remove_headers(input_text)
     sentences = prepare_body_text(sentences)
     sentences = remove_trailing_content(sentences)
@@ -76,15 +82,27 @@ def sanitize_text(input_text: str) -> str:
 
 
 def zip_sentences(list1: List[str], list2: List[str]) -> List[str]:
-    """Create a matched-pairs list of all sentences between two lists
+    """Create a matched-pairs list of all sentences between two lists.
+
+    :param list1: A list of N paragraphs
+    :param list2: A list of N paragraphs
+    :return: A combined list from inputs
+
     >>> zip_sentences(["1. First", "2. Second"], ["1. First", "2. Second"])
     [('1. First', '1. First'), ('2. Second', '2. Second')]
+
     """
     return list(itertools.zip_longest(list1, list2))
 
 
 def create_csv(data: List[str], path: str, source_tuple: Tuple[str, str]) -> str:
-    """Write data to a .csv file"""
+    """Write data to a .csv file.
+
+    :param data: Matched paragraph data
+    :param path: Destination of output
+    :param source_tuple: Headers for csv file
+    :return: Completion message
+    """
     with open(path, 'w', newline='') as csvfile:
         writer(csvfile, delimiter=',').writerows([source_tuple])
         writer(csvfile, delimiter=',').writerows(data)
@@ -92,7 +110,11 @@ def create_csv(data: List[str], path: str, source_tuple: Tuple[str, str]) -> str
 
 
 def main(argv: List[str]) -> None:
-    """Receive .pdfs and input and generate matched-pairs list of paragraphs."""
+    """Receive .pdfs and input and generate matched-pairs list of paragraphs.
+
+    :param argv: User-provided arguments
+    :return: None
+    """
     parser = argparse.ArgumentParser(description='Match numbered paragraphs from a PDF and store them in a CSV file.')
     parser.add_argument('input', metavar='I', type=str, nargs=2, help='two files to match and store')
     parser.add_argument('output', metavar='O', type=str, nargs=1, help='name of output file')
