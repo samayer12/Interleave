@@ -13,15 +13,18 @@ import textract  # type: ignore
 
 
 def convert_pdf_to_txt(path: str) -> str:
-    """Represent .pdf as .txt"""
+    """Represent .pdf as .txt."""
     return str(textract.process(path, method='pdfminer').decode())
 
 
 def build_paragraphs(input_text: str) -> List[str]:
-    """Create a list of paragraphs from a string of sentences
+    r"""Create a list of paragraphs from a string of sentences.
 
     >>> build_paragraphs("Header\\n\\n1. First.\\n\\n2. Second.\\n\\n3. Third.")
     ['1. First.', '2. Second.', '3. Third.']
+
+    :param input_text: Sanitized text to turn into paragraphs
+    :return: A list of paragraphs
     """
     matches = re.split(r'(\n\n)(\d+\.\s)', input_text)[2:]
     result = ['']
@@ -41,7 +44,7 @@ def build_paragraphs(input_text: str) -> List[str]:
 
 
 def remove_headers(input_text: str) -> str:
-    """Strip section headers and other titles"""
+    """Strip section headers and other titles."""
     sentences = re.sub(r'(\fC.*\d\n)', '', input_text)  # Remove Page Headers
     sentences = re.sub(r'(\n\d+ \n)', '', sentences)  # Remove Page Numbers
     sentences = re.sub(r'\n+[A-Z ]+\n+', '\n\n', sentences)  # Remove Section Titles
@@ -53,7 +56,7 @@ def remove_headers(input_text: str) -> str:
 
 
 def prepare_body_text(input_text: str) -> str:
-    """Take raw sentences and standardize them"""
+    """Take raw sentences and standardize them."""
     sentences = re.sub(r'(\n{3,}|\n\n )', '\n\n', input_text)  # Apply Consistent Paragraph Spacing
     sentences = re.sub(r' {2,}', ' ', sentences)  # Apply Consistent Text Spacing
     sentences = re.sub(r'(\S)(\n\n)([A-Za-z])', r'\1 \3', sentences)  # Handle EOL without a space
@@ -62,7 +65,7 @@ def prepare_body_text(input_text: str) -> str:
 
 
 def remove_trailing_content(input_text: str) -> str:
-    """Remove content that comes after the last paragraph (such as Tables)"""
+    """Remove content that comes after the last paragraph (such as Tables)."""
     sentences = re.split(r'\n\nTable 1:', input_text)[0]  # Remove tables that follow document body
     sentences = re.split(r'\s/s/', sentences)[0]  # Remove EPA-style signature blocks
     sentences = re.split(r'Respectfully submitted,', sentences)[0]  # Remove EPA-style signature blocks
