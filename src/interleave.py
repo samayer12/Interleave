@@ -112,6 +112,12 @@ def create_csv(data: List[str], path: str, source_tuple: Tuple[str, str]) -> str
 
 
 def produce_raw_output(dest_1, dest_2):
+    """Creates .txt files that contain unprocessed .pdf text.
+
+    :param dest_1: Output for first .pdf file.
+    :param dest_2: Output for second .pdf file.
+    :return: Completion message.
+    """
     doc_1_dest = '../output/' + dest_1.split('/')[-1].split('.')[0] + '.txt'
     doc_2_dest = '../output/' + dest_2.split('/')[-1].split('.')[0] + '.txt'
     with open(doc_1_dest, 'w') as file:
