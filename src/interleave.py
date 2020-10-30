@@ -20,11 +20,11 @@ def convert_pdf_to_txt(path: str) -> str:
 def build_paragraphs(input_text: str) -> List[str]:
     r"""Create a list of paragraphs from a string of sentences.
 
-    >>> build_paragraphs("Header\\n\\n1. First.\\n\\n2. Second.\\n\\n3. Third.")
-    ['1. First.', '2. Second.', '3. Third.']
-
     :param input_text: Sanitized text to turn into paragraphs
     :return: A list of paragraphs
+
+    >>> build_paragraphs("Header\n\n1. First.\n\n2. Second.\n\n3. Third.")
+    ['1. First.', '2. Second.', '3. Third.']
     """
     matches = re.split(r'(\n\n)(\d+\.\s)', input_text)[2:]
     result = ['']
@@ -93,7 +93,6 @@ def zip_sentences(list1: List[str], list2: List[str]) -> List[str]:
 
     >>> zip_sentences(["1. First", "2. Second"], ["1. First", "2. Second"])
     [('1. First', '1. First'), ('2. Second', '2. Second')]
-
     """
     return list(itertools.zip_longest(list1, list2))
 
