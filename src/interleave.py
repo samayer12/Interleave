@@ -111,7 +111,7 @@ def create_csv(data: List[str], path: str, source_tuple: Tuple[str, str]) -> str
     return 'Files created.'
 
 
-def produce_raw_output(dest_1, dest_2):
+def produce_raw_output(dest_1: str, dest_2: str) -> str:
     """Creates .txt files that contain unprocessed .pdf text.
 
     :param dest_1: Output for first .pdf file.
