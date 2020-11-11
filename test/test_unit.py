@@ -169,7 +169,7 @@ class PDFUnitTests(unittest.TestCase):
                    '\nDocument 1 destination: ../output/myfile.txt' \
                    '\nDocument 2 destination: ../output/myfile2.txt'
 
-        result = interleave.produce_raw_output('/mypath/myfile.txt', '/mypath2/myfile2.txt')
+        result = interleave.produce_raw_output('/mypath/myfile.pdf', '/mypath2/myfile2.pdf')
 
         self.assertEqual(expected, result)
         self.assertEqual(2, spy_convert_pdf_to_txt.call_count)

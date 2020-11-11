@@ -111,19 +111,19 @@ def create_csv(data: List[str], path: str, source_tuple: Tuple[str, str]) -> str
     return 'Files created.'
 
 
-def produce_raw_output(dest_1: str, dest_2: str) -> str:
+def produce_raw_output(source_1: str, source_2: str) -> str:
     """Creates .txt files that contain unprocessed .pdf text.
 
-    :param dest_1: Output for first .pdf file.
-    :param dest_2: Output for second .pdf file.
+    :param source_1: First .pdf file.
+    :param source_2: Second .pdf file.
     :return: Completion message.
     """
-    doc_1_dest = '../output/' + dest_1.split('/')[-1].split('.')[0] + '.txt'
-    doc_2_dest = '../output/' + dest_2.split('/')[-1].split('.')[0] + '.txt'
+    doc_1_dest = '../output/' + source_1.split('/')[-1].split('.')[0] + '.txt'
+    doc_2_dest = '../output/' + source_2.split('/')[-1].split('.')[0] + '.txt'
     with open(doc_1_dest, 'w') as file:
-        file.write(convert_pdf_to_txt(doc_1_dest))
+        file.write(convert_pdf_to_txt(source_1))
     with open(doc_2_dest, 'w') as file:
-        file.write(convert_pdf_to_txt(doc_2_dest))
+        file.write(convert_pdf_to_txt(source_2))
     return ('\nStored inputs as raw text.' +
             '\nDocument 1 destination: ' + doc_1_dest +
             '\nDocument 2 destination: ' + doc_2_dest)
