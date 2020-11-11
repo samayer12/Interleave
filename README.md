@@ -18,6 +18,7 @@ Document1,Document2
 **Current Status**
 
 `102/1088` paragraphs in test data have an anomaly.
+A complete list of observed errors is in [Errors.csv](https://github.com/samayer12/Interleave/blob/master/Errors.csv)
 Error types:
 * Double-Number Parse
 * Excessive Heading
