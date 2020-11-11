@@ -17,7 +17,20 @@ Document1,Document2
 
 **Current Status**
 
-`106/1088` paragraphs (`9/74%`) in test data have an anomaly.
+`102/1088` paragraphs in test data have an anomaly.
+Error types:
+* Double-Number Parse
+* Excessive Heading
+* Grouped Response
+* Heading Parse
+* Missing Character(s)
+* Missing Text
+* Pagebreak Parse
+* Parse Error
+* Parsed Count
+* Preceding Data
+* WTF
+
 Here's a tabular representation of the anomalies.
 
 |     | 1/2 | 3/4*| 5/6 | 7/8 | Total |
